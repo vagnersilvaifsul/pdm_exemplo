@@ -10,15 +10,31 @@ Siga este roteiro para desenvolver o projeto de PDM:
 
 //2. Criando a navegabilidade do app
 2.1 Crie a branch modulo1 e faça o checkout pra ela;
-2.2 Adicine as dependências da navegabilidade, commit com a tag chore;
+2.2 Adicine as dependências da navegabilidade, commit com a tag chore: add react navigation;
 2.3 Crie a pasta telas e adicione dois componentes simples, Home.tsx e SignIn.tsx;
 2.4 Crie a pasta navigation. Nela crie dois arquivos, Providers.tsx e Navigator.tsx;
 2.5 No arquivo Navigator.tsx codifique o container de navegação, a StatusBar, o Navigator (Stack por enquanto) e adicione as scresns;
 2.6 Retorne na SignIn.tsx e adicione um botão RN (vai ser removido depois) e faça com que o app navegue para a tela Home;
-2.7 Teste a solução;
-2.8 Faça o commit com a tag feat: signIn, e faça o push. Depois, faça um merge na branch main, commit e push;
+2.7 Modifique o compoenente App.tsx para que renderize apenas o componente Providers;
+2.8 Teste a solução;
+2.9 Faça o commit com a tag feat: navigation, e faça o push;
+3.0 Faça um merge na branch main, commit e push;
 
 //3. Criando a tela e as funcionalidades do SignIn
+//Fazendo o login, escutando o Authentication e armazenado o usuário da sessão numa state
 3.2 Adicione as dependências de para construção de UI, a React Native Paper;
 3.3 Teste o app;
-3.4 Commit com a tag chore: add React Native Paper;
+3.4 Commit com a tag chore: add react native paper;
+3.5 Contrua a tela em SignIn.tsx com os componenetes necessários;
+3.6 Adicione a dependência do módulo base do Firebase, e a dependência do Authentication;
+3.7 Crie a pasta context e nela crie o arquivo AuthProvider.tsx;
+3.8 Crie a estrutura de um Context;
+3.8 Implemente a operação de login;
+3.9 Implemente o listener para saber se o usuário está ou não logado no serviço Authentication;
+3.10 Nesse listener, armazene o usuário da sessão em um state do AuthProvider.tsx;
+3.11 Teste a solução;
+3.12 Commit com a tag feat: signIn até Authentication, e push.
+
+//4. Redefinindo a navegabilidade do app
+
+
