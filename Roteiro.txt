@@ -1,9 +1,9 @@
 Siga este roteiro para desenvolver o projeto de PDM:
 //1. Executando o primeiro projeto
-1.1 Configure o ambiente para RN CLI;
-1.2 Configure o VSCode para produtividade;
+1.1 Configure o ambiente para RN CLI, https://reactnative.dev/docs/set-up-your-environment;
+1.2 Configure o VSCode para produtividade, https://apnp.ifsul.edu.br/course/view.php?id=25926#section-1;
 1.3 Crie um projeto RN, assim: npx @react-native-community/cli@latest init pdm_seuNomeAqui;
-1.4 Execute o projeto para testar se o ambiente está ok;
+1.4 Execute o projeto para testar se o ambiente está ok, com: yarn android;
 1.5 Crie um repositório privado no Github;
 1.6 Adicione o repositório no seu Git local;
 1.7 Faça o push para o repositório remoto.
@@ -22,18 +22,19 @@ Siga este roteiro para desenvolver o projeto de PDM:
 
 //3. Criando a tela e as funcionalidades do SignIn
 //Fazendo o login, escutando o Authentication e armazenado o usuário da sessão numa state
-3.2 Adicione as dependências de para construção de UI, a React Native Paper;
-3.3 Teste o app;
-3.4 Commit com a tag chore: add react native paper;
-3.5 Contrua a tela em SignIn.tsx com os componenetes necessários;
-3.6 Adicione a dependência do módulo base do Firebase, e a dependência do Authentication;
-3.7 Crie a pasta context e nela crie o arquivo AuthProvider.tsx;
-3.8 Crie a estrutura de um Context;
-3.8 Implemente a operação de login;
-3.9 Implemente o listener para saber se o usuário está ou não logado no serviço Authentication;
-3.10 Nesse listener, armazene o usuário da sessão em um state do AuthProvider.tsx;
-3.11 Teste a solução;
-3.12 Commit com a tag feat: signIn até Authentication, e push.
+3.1 Adicione as dependências de para construção de UI, a React Native Paper, https://callstack.github.io/react-native-paper/docs/guides/getting-started/;
+3.2 Adicione o <PaperProvider> em Providers.tsx;
+3.4 Teste o app;
+3.5 Commit com a tag chore: add react native paper;
+3.6 Contrua a tela em SignIn.tsx com os componenetes necessários;
+3.7 Adicione a dependência do módulo base do Firebase, e a dependência do Authentication;
+3.8 Crie a pasta context e nela crie o arquivo AuthProvider.tsx;
+3.9 Crie a estrutura de um Context;
+3.10 Implemente a operação de login;
+3.11 Implemente o listener para saber se o usuário está ou não logado no serviço Authentication;
+3.12 Nesse listener, armazene o usuário da sessão em um state do AuthProvider.tsx;
+3.13 Teste a solução;
+3.14 Commit com a tag feat: signIn até Authentication, e push.
 
 //4. Redefinindo a navegabilidade do app
 
