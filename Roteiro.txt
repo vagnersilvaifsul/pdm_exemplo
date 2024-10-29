@@ -3,7 +3,7 @@ Siga este roteiro para desenvolver o projeto de PDM:
 1.1 Configure o ambiente para RN CLI, https://reactnative.dev/docs/set-up-your-environment;
 1.2 Configure o VSCode para produtividade, https://apnp.ifsul.edu.br/course/view.php?id=25926#section-1;
 1.3 Crie um projeto RN, assim: npx @react-native-community/cli@latest init pdm_seuNomeAqui;
-1.4 Execute o projeto para testar se o ambiente está ok, com: yarn android;
+1.4 Execute o projeto para testar se o ambiente está ok, com: yarn start;
 1.5 Crie um repositório privado no Github;
 1.6 Adicione o repositório no seu Git local;
 1.7 Faça o push para o repositório remoto.
@@ -37,5 +37,3 @@ Siga este roteiro para desenvolver o projeto de PDM:
 3.14 Commit com a tag feat: signIn até Authentication, e push.
 
 //4. Redefinindo a navegabilidade do app
-
-

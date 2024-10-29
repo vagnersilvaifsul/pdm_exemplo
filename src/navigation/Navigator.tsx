@@ -11,7 +11,11 @@ export default function Navigator() {
   return (
     <NavigationContainer>
       <StatusBar />
-      <Stack.Navigator>
+      <Stack.Navigator
+        initialRouteName="Preload"
+        screenOptions={{
+          headerShown: false,
+        }}>
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="Home" component={Home} />
       </Stack.Navigator>
