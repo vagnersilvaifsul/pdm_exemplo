@@ -14,7 +14,11 @@ function SignIn({navigation, theme}: any) {
   const [senha, setSenha] = useState('');
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={{
+        ...styles.container,
+        backgroundColor: theme.colors.backgroundPage,
+      }}>
       <ScrollView>
         <>
           <Image
