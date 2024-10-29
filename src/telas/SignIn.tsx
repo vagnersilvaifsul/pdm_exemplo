@@ -17,7 +17,7 @@ function SignIn({navigation, theme}: any) {
     <SafeAreaView
       style={{
         ...styles.container,
-        backgroundColor: theme.colors.backgroundPage,
+        backgroundColor: theme.colors.background,
       }}>
       <ScrollView>
         <>
