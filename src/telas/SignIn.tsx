@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useController, useForm} from 'react-hook-form';
 import {
   Alert,
@@ -41,6 +41,7 @@ function Input({
 
 function SignIn({navigation, theme}: any) {
   const {control, handleSubmit} = useForm<Credencial>();
+  const [enableText, setEnableText] = useState(true);
 
   useEffect(() => {
     console.log('redenrizou');
@@ -76,8 +77,13 @@ function SignIn({navigation, theme}: any) {
             control={control}
             label="Senha"
             placeholder="Digite sua senha"
-            secureTextEntry
-            right={<TextInput.Icon icon="eye" />}
+            secureTextEntry={enableText}
+            right={
+              <TextInput.Icon
+                icon="eye"
+                onPress={() => setEnableText(previus => !previus)}
+              />
+            }
           />
           <Text
             style={{...styles.textEsqueceuSenha, color: theme.colors.tertiary}}
