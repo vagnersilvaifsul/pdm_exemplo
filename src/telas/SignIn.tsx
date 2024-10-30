@@ -73,7 +73,7 @@ function SignIn({navigation, theme}: any) {
           />
           {errors.email && (
             <Text style={{...styles.textError, color: theme.colors.error}}>
-              {`Este campo é obrigatório. ${errors.email}`}
+              Este campo é obrigatório.
             </Text>
           )}
 
