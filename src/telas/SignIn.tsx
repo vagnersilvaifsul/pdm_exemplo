@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   Image,
@@ -9,9 +9,25 @@ import {
 } from 'react-native';
 import {Button, Divider, Text, TextInput, withTheme} from 'react-native-paper';
 
+type Credencial = {
+  email: string;
+  senha: string;
+};
+
 function SignIn({navigation, theme}: any) {
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const [credencial, setCredencial] = useState<Credencial>({
+    email: '',
+    senha: '',
+  });
+
+  useEffect(() => {
+    console.log('renderizou');
+  });
+
+  function onSubmit() {
+    console.log(`email: ${credencial.email} e senha: ${credencial.senha}`);
+    navigation.navigate('Home');
+  }
 
   return (
     <SafeAreaView
@@ -27,8 +43,9 @@ function SignIn({navigation, theme}: any) {
           />
           <TextInput
             style={styles.textinput}
-            value={email}
-            onChangeText={t => setEmail(t)}
+            value={credencial.email}
+            onChangeText={t => setCredencial({...credencial, email: t})}
+            autoCapitalize="none"
             mode="outlined"
             label="Email"
             placeholder="Digite seu email"
@@ -36,8 +53,9 @@ function SignIn({navigation, theme}: any) {
           />
           <TextInput
             style={styles.textinput}
-            value={senha}
-            onChangeText={t => setSenha(t)}
+            value={credencial.senha}
+            onChangeText={t => setCredencial({...credencial, senha: t})}
+            autoCapitalize="none"
             mode="outlined"
             label="Senha"
             placeholder="Digite sua senha"
@@ -52,12 +70,7 @@ function SignIn({navigation, theme}: any) {
             }>
             Esqueceu sua senha?
           </Text>
-          <Button
-            style={styles.button}
-            mode="contained"
-            onPress={() => {
-              navigation.navigate('Home');
-            }}>
+          <Button style={styles.button} mode="contained" onPress={onSubmit}>
             Entrar
           </Button>
           <Divider />
