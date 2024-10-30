@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useEffect} from 'react';
+import {useController, useForm} from 'react-hook-form';
 import {
   Alert,
   Image,
@@ -9,9 +10,46 @@ import {
 } from 'react-native';
 import {Button, Divider, Text, TextInput, withTheme} from 'react-native-paper';
 
+type Credencial = {
+  email: string;
+  senha: string;
+};
+
+function Input({
+  name,
+  control,
+  label,
+  placeholder,
+  secureTextEntry,
+  right,
+}: any) {
+  const {field} = useController({control, defaultValue: '', name});
+  return (
+    <TextInput
+      style={styles.textinput}
+      mode="outlined"
+      autoCapitalize="none"
+      label={label}
+      placeholder={placeholder}
+      secureTextEntry={secureTextEntry}
+      right={right}
+      value={field.value}
+      onChangeText={field.onChange}
+    />
+  );
+}
+
 function SignIn({navigation, theme}: any) {
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const {control, handleSubmit} = useForm<Credencial>();
+
+  useEffect(() => {
+    console.log('redenrizou');
+  }, []);
+
+  function onSubmit(data: Credencial) {
+    console.log(JSON.stringify(data));
+    navigation.navigate('Home');
+  }
 
   return (
     <SafeAreaView
@@ -25,20 +63,17 @@ function SignIn({navigation, theme}: any) {
             style={styles.image}
             source={require('../assets/images/logo512.png')}
           />
-          <TextInput
-            style={styles.textinput}
-            value={email}
-            onChangeText={t => setEmail(t)}
-            mode="outlined"
+          <Input
+            name="email"
+            control={control}
             label="Email"
             placeholder="Digite seu email"
+            secureTextEntry={false}
             right={<TextInput.Icon icon="email" />}
           />
-          <TextInput
-            style={styles.textinput}
-            value={senha}
-            onChangeText={t => setSenha(t)}
-            mode="outlined"
+          <Input
+            name="senha"
+            control={control}
             label="Senha"
             placeholder="Digite sua senha"
             secureTextEntry
@@ -55,9 +90,7 @@ function SignIn({navigation, theme}: any) {
           <Button
             style={styles.button}
             mode="contained"
-            onPress={() => {
-              navigation.navigate('Home');
-            }}>
+            onPress={handleSubmit(onSubmit)}>
             Entrar
           </Button>
           <Divider />
