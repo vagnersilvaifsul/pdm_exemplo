@@ -1,3 +1,4 @@
+import {yupResolver} from '@hookform/resolvers/yup';
 import React, {useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {
@@ -9,6 +10,15 @@ import {
   View,
 } from 'react-native';
 import {Button, Divider, Text, TextInput, withTheme} from 'react-native-paper';
+import * as yup from 'yup';
+
+const schema = yup
+  .object()
+  .shape({
+    email: yup.string().email('Digite um email válido'),
+    senha: yup.string().min(8, 'A senha deve conter pelo menos 8 dígitos'),
+  })
+  .required();
 
 type Credencial = {
   email: string;
@@ -19,24 +29,32 @@ function SignIn({navigation, theme}: any) {
   const {
     control,
     handleSubmit,
+    register,
     formState: {errors},
-  } = useForm<Credencial>({
+  } = useForm<any>({
     defaultValues: {
       email: '',
       senha: '',
     },
+    mode: 'onSubmit',
+    resolver: yupResolver(schema),
   });
-  const [enableText, setEnableText] = useState(true);
+  const [exibirSenha, setExibirSenha] = useState(true);
 
   useEffect(() => {
     console.log('redenrizou');
   }, []);
 
+  useEffect(() => {
+    register('email');
+    register('senha');
+  }, [register]);
+
   function onSubmit(data: Credencial) {
     console.log(JSON.stringify(data));
     navigation.navigate('Home');
   }
-  console.log(errors);
+  //console.log(errors);
 
   return (
     <SafeAreaView
@@ -53,9 +71,6 @@ function SignIn({navigation, theme}: any) {
 
           <Controller
             control={control}
-            rules={{
-              required: true,
-            }}
             render={({field: {onChange, onBlur, value}}) => (
               <TextInput
                 style={styles.textinput}
@@ -73,7 +88,7 @@ function SignIn({navigation, theme}: any) {
           />
           {errors.email && (
             <Text style={{...styles.textError, color: theme.colors.error}}>
-              Este campo é obrigatório.
+              {errors.email?.message?.toString()}
             </Text>
           )}
 
@@ -89,14 +104,14 @@ function SignIn({navigation, theme}: any) {
                 placeholder="Digite sua senha"
                 mode="outlined"
                 autoCapitalize="none"
-                secureTextEntry={enableText}
+                secureTextEntry={exibirSenha}
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
                 right={
                   <TextInput.Icon
                     icon="eye"
-                    onPress={() => setEnableText(previus => !previus)}
+                    onPress={() => setExibirSenha(previus => !previus)}
                   />
                 }
               />
@@ -105,7 +120,7 @@ function SignIn({navigation, theme}: any) {
           />
           {errors.senha && (
             <Text style={{...styles.textError, color: theme.colors.error}}>
-              Este campo é obrigatório.
+              {errors.senha?.message?.toString()}
             </Text>
           )}
 
