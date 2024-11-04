@@ -12,17 +12,28 @@ import {
 import {Button, Divider, Text, TextInput, withTheme} from 'react-native-paper';
 import * as yup from 'yup';
 
+/*
+  /^
+  (?=.*[a-z])           // deve conter ao menos uma letra minúscula
+  (?=.*[A-Z])           // deve conter ao menos uma letra maiúscula
+  (?=.*[$*&@#])         // deve conter ao menos um caractere especial
+  [0-9a-zA-Z$*&@#]{8,}  // deve conter ao menos 8 dos caracteres mencionados
+$/
+*/
 const schema = yup
   .object()
   .shape({
     email: yup
       .string()
       .required('O email é obrigatório')
-      .email('Digite um email válido'),
+      .matches(/\S+@\S+\.\S+/, 'Email inválido'),
     senha: yup
       .string()
       .required('A senha é obrigatória')
-      .min(8, 'A senha deve conter pelo menos 8 dígitos'),
+      .matches(
+        /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/,
+        'A senha deve conter ao menos uma letra maiúscula, uma letra minúscula, um caractere especial e um total de 8 caracteres',
+      ),
   })
   .required();
 
@@ -186,7 +197,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   textCadastro: {},
-  textError: {},
+  textError: {
+    width: 350,
+  },
   button: {
     marginTop: 50,
     marginBottom: 30,
