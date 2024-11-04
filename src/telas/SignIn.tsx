@@ -14,6 +14,7 @@ import * as yup from 'yup';
 
 /*
   /^
+  (?=.*\d)              // deve conter ao menos um dígito
   (?=.*[a-z])           // deve conter ao menos uma letra minúscula
   (?=.*[A-Z])           // deve conter ao menos uma letra maiúscula
   (?=.*[$*&@#])         // deve conter ao menos um caractere especial
