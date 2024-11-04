@@ -15,8 +15,14 @@ import * as yup from 'yup';
 const schema = yup
   .object()
   .shape({
-    email: yup.string().email('Digite um email válido'),
-    senha: yup.string().min(8, 'A senha deve conter pelo menos 8 dígitos'),
+    email: yup
+      .string()
+      .required('O email é obrigatório')
+      .email('Digite um email válido'),
+    senha: yup
+      .string()
+      .required('A senha é obrigatória')
+      .min(8, 'A senha deve conter pelo menos 8 dígitos'),
   })
   .required();
 
