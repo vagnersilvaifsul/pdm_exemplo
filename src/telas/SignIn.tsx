@@ -32,7 +32,7 @@ const schema = yup
       .required('A senha é obrigatória')
       .matches(
         /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/,
-        'A senha deve conter ao menos uma letra maiúscula, uma letra minúscula, um caractere especial e um total de 8 caracteres',
+        'A senha deve conter ao menos uma letra maiúscula, uma letra minúscula, um númeral, um caractere especial e um total de 8 caracteres',
       ),
   })
   .required();
