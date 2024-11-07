@@ -1,4 +1,5 @@
 import {yupResolver} from '@hookform/resolvers/yup';
+import {CommonActions} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {
@@ -15,7 +16,7 @@ import {
   Divider,
   Text,
   TextInput,
-  withTheme,
+  useTheme,
 } from 'react-native-paper';
 import * as yup from 'yup';
 import {AuthContext} from '../context/AuthProvider';
@@ -47,7 +48,8 @@ const schema = yup
   })
   .required();
 
-function SignIn({navigation, theme}: any) {
+function SignIn({navigation}: any) {
+  const theme = useTheme();
   const {
     control,
     handleSubmit,
@@ -87,7 +89,12 @@ function SignIn({navigation, theme}: any) {
     setLogando(true);
     const mensagem = await signIn(data);
     if (mensagem === 'ok') {
-      navigation.navigate('Home');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'AppStack'}],
+        }),
+      );
     } else {
       setMensagemErro(mensagem);
       setDialogVisivel(true);
@@ -208,7 +215,7 @@ function SignIn({navigation, theme}: any) {
     </SafeAreaView>
   );
 }
-export default withTheme(SignIn);
+export default SignIn;
 
 const styles = StyleSheet.create({
   container: {
