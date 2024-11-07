@@ -15,7 +15,7 @@ import {
   Divider,
   Text,
   TextInput,
-  withTheme,
+  useTheme,
 } from 'react-native-paper';
 import * as yup from 'yup';
 import {AuthContext} from '../context/AuthProvider';
@@ -47,7 +47,8 @@ const schema = yup
   })
   .required();
 
-function SignIn({navigation, theme}: any) {
+function SignIn({navigation}: any) {
+  const theme = useTheme();
   const {
     control,
     handleSubmit,
@@ -208,7 +209,7 @@ function SignIn({navigation, theme}: any) {
     </SafeAreaView>
   );
 }
-export default withTheme(SignIn);
+export default SignIn;
 
 const styles = StyleSheet.create({
   container: {
