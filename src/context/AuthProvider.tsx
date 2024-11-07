@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import React, {createContext, useEffect, useState} from 'react';
 import {Credencial} from '../model/types';
 import {Usuario} from '../model/Usuario';
@@ -27,14 +28,20 @@ export const AuthProvider = ({children}: any) => {
     Funções do processo de Autenticação
   */
   async function signUp(usuario: Usuario) {
-    console.log('================= AuthProvider ===================');
-    console.log(usuario);
-    console.log('====================================');
     try {
       await auth().createUserWithEmailAndPassword(usuario.email, usuario.senha);
-      console.log(auth().currentUser);
       await auth().currentUser?.sendEmailVerification();
-      //await firestore().collection('users').doc(auth().currentUser.uid).set(localUser);
+      const usuarioFirestore = {
+        email: usuario.email,
+        nome: usuario.nome,
+        urlFoto: usuario.urlFoto,
+        curso: usuario.curso,
+        perfil: usuario.perfil,
+      };
+      await firestore()
+        .collection('usuarios')
+        .doc(auth().currentUser?.uid)
+        .set(usuarioFirestore);
       return 'ok';
     } catch (e) {
       return launchServerMessageErro(e);

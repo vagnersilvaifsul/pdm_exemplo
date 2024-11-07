@@ -244,7 +244,9 @@ export default function SignUp({navigation}: any) {
         visible={dialogVisivel}
         onDismiss={() => {
           setDialogVisivel(false);
-          navigation.goBack();
+          if (mensagem.tipo === 'ok') {
+            navigation.goBack();
+          }
         }}>
         <Dialog.Icon
           icon={

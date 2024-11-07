@@ -14,7 +14,7 @@ export class Usuario {
     urlFoto: string,
     curso: Curso,
     perfil: Perfil,
-    senha: string,
+    senha?: string,
   ) {
     this.email = email;
     this.nome = nome;
