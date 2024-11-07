@@ -122,6 +122,8 @@ function SignIn({navigation}: any) {
                 placeholder="Digite seu email"
                 mode="outlined"
                 autoCapitalize="none"
+                returnKeyType="next"
+                keyboardType="email-address"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -148,6 +150,7 @@ function SignIn({navigation}: any) {
                 placeholder="Digite sua senha"
                 mode="outlined"
                 autoCapitalize="none"
+                returnKeyType="go"
                 secureTextEntry={exibirSenha}
                 onBlur={onBlur}
                 onChangeText={onChange}

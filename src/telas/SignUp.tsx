@@ -6,7 +6,9 @@ import {Button, Dialog, Text, TextInput, useTheme} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import * as yup from 'yup';
 import {AuthContext} from '../context/AuthProvider';
-import {UsuarioAuth} from '../model/types';
+import {Curso} from '../model/Curso';
+import {Perfil} from '../model/Perfil';
+import {Usuario} from '../model/Usuario';
 
 const requiredMessage = 'Campo obrigatório';
 
@@ -54,10 +56,9 @@ export default function SignUp({navigation}: any) {
   });
   const [exibirSenha, setExibirSenha] = useState(true);
   const [cadastrando, setCadastrando] = useState(false);
-  const [abrindo, setAbrindo] = useState(false);
   const [dialogVisivel, setDialogVisivel] = useState(false);
-  const [mensagemErro, setMensagemErro] = useState('');
-  const {signIn} = useContext<any>(AuthContext);
+  const [mensagem, setMensagem] = useState({tipo: '', mensagem: ''});
+  const {signUp} = useContext<any>(AuthContext);
 
   useEffect(() => {
     register('nome');
@@ -66,27 +67,27 @@ export default function SignUp({navigation}: any) {
     register('confirmar_senha');
   }, [register]);
 
-  async function onSubmit(data: UsuarioAuth) {
-    console.log(JSON.stringify(data));
-    if (data.senha !== data.confirmar_senha) {
-      setMensagemErro('As senhas não conferem');
-      setDialogVisivel(true);
-      return;
-    }
+  async function onSubmit(data: Usuario) {
     setCadastrando(true);
-    // const mensagem = await signIn(data);
-    // if (mensagem === 'ok') {
-    //   navigation.dispatch(
-    //     CommonActions.reset({
-    //       index: 0,
-    //       routes: [{name: 'AppStack'}],
-    //     }),
-    //   );
-    // } else {
-    //   setMensagemErro(mensagem);
-    //   setDialogVisivel(true);
-    // setLogando(true);
-    // }
+    data.urlFoto =
+      'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50';
+    data.curso = Curso.CSTSI;
+    data.perfil = Perfil.Aluno;
+    data.senha = data.senha;
+    const msg = await signUp(data);
+    if (msg === 'ok') {
+      setMensagem({
+        tipo: 'ok',
+        mensagem:
+          'Show! Você foi cadastrado com sucesso. Verifique seu email para validar sua conta.',
+      });
+      setDialogVisivel(true);
+      setCadastrando(false);
+    } else {
+      setMensagem({tipo: 'erro', mensagem: msg});
+      setDialogVisivel(true);
+      setCadastrando(false);
+    }
   }
 
   return (
@@ -106,16 +107,18 @@ export default function SignUp({navigation}: any) {
               style={styles.buttonImage}
               mode="outlined"
               icon="image"
-              onPress={() => Alert.alert('Vamos ver isso em upload de imagens')}
-              loading={abrindo}>
+              onPress={() =>
+                Alert.alert('Vamos ver isso em upload de imagens')
+              }>
               Galeria
             </Button>
             <Button
               style={styles.buttonImage}
               mode="outlined"
               icon="camera"
-              onPress={() => Alert.alert('Vamos ver isso em upload de imagens')}
-              loading={abrindo}>
+              onPress={() =>
+                Alert.alert('Vamos ver isso em upload de imagens')
+              }>
               Foto
             </Button>
           </View>
@@ -129,6 +132,7 @@ export default function SignUp({navigation}: any) {
                 placeholder="Digite seu nome completo"
                 mode="outlined"
                 autoCapitalize="words"
+                returnKeyType="next"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -152,6 +156,8 @@ export default function SignUp({navigation}: any) {
                 placeholder="Digite seu email"
                 mode="outlined"
                 autoCapitalize="none"
+                returnKeyType="next"
+                keyboardType="email-address"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -175,6 +181,7 @@ export default function SignUp({navigation}: any) {
                 placeholder="Digite sua senha"
                 mode="outlined"
                 autoCapitalize="none"
+                returnKeyType="next"
                 secureTextEntry={exibirSenha}
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -203,6 +210,7 @@ export default function SignUp({navigation}: any) {
                 placeholder="Confirme sua senha"
                 mode="outlined"
                 autoCapitalize="none"
+                returnKeyType="go"
                 secureTextEntry={exibirSenha}
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -232,12 +240,26 @@ export default function SignUp({navigation}: any) {
           </Button>
         </>
       </ScrollView>
-      <Dialog visible={dialogVisivel} onDismiss={() => setDialogVisivel(false)}>
-        <Dialog.Icon icon="alert-circle-outline" size={60} />
-        <Dialog.Title style={styles.textDialog}>Erro</Dialog.Title>
+      <Dialog
+        visible={dialogVisivel}
+        onDismiss={() => {
+          setDialogVisivel(false);
+          navigation.goBack();
+        }}>
+        <Dialog.Icon
+          icon={
+            mensagem.tipo === 'ok'
+              ? 'checkbox-marked-circle-outline'
+              : 'alert-circle-outline'
+          }
+          size={60}
+        />
+        <Dialog.Title style={styles.textDialog}>
+          {mensagem.tipo === 'ok' ? 'Informação' : 'Erro'}
+        </Dialog.Title>
         <Dialog.Content>
           <Text style={styles.textDialog} variant="bodyLarge">
-            {mensagemErro}
+            {mensagem.mensagem}
           </Text>
         </Dialog.Content>
       </Dialog>

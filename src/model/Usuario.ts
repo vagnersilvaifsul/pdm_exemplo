@@ -1,5 +1,5 @@
-import {Curso} from './Curso';
-import {Perfil} from './Perfil';
+import { Curso } from './Curso';
+import { Perfil } from './Perfil';
 
 export class Usuario {
   public email: string;
@@ -7,17 +7,20 @@ export class Usuario {
   public urlFoto: string;
   public curso: Curso;
   public perfil: Perfil;
+  public senha: string;
   constructor(
     email: string,
     nome: string,
     urlFoto: string,
     curso: Curso,
     perfil: Perfil,
+    senha: string,
   ) {
     this.email = email;
     this.nome = nome;
     this.urlFoto = urlFoto;
     this.curso = curso;
     this.perfil = perfil;
+    this.senha = senha;
   }
 }
