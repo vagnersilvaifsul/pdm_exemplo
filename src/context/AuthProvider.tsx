@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import auth from '@react-native-firebase/auth';
 import React, {createContext, useEffect, useState} from 'react';
 import {Credencial} from '../model/types';
@@ -16,7 +17,9 @@ export const AuthProvider = ({children}: any) => {
     const unsubscriber = auth().onAuthStateChanged(authUser => {
       setUserAuth({...userAuth, authUser});
     });
-    return unsubscriber; //unsubscribe o listener ao desmontar
+    return () => {
+      unsubscriber(); //unsubscribe o listener ao desmontar
+    };
   }, []);
 
   async function signIn(credencial: Credencial) {
