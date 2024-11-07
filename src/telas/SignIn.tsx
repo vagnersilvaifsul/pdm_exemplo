@@ -1,5 +1,5 @@
 import {yupResolver} from '@hookform/resolvers/yup';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {
   Alert,
@@ -9,8 +9,17 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {Button, Divider, Text, TextInput, withTheme} from 'react-native-paper';
+import {
+  Button,
+  Dialog,
+  Divider,
+  Text,
+  TextInput,
+  withTheme,
+} from 'react-native-paper';
 import * as yup from 'yup';
+import {AuthContext} from '../context/AuthProvider';
+import {Credencial} from '../model/types';
 
 /*
   /^
@@ -38,11 +47,6 @@ const schema = yup
   })
   .required();
 
-type Credencial = {
-  email: string;
-  senha: string;
-};
-
 function SignIn({navigation, theme}: any) {
   const {
     control,
@@ -58,19 +62,36 @@ function SignIn({navigation, theme}: any) {
     resolver: yupResolver(schema),
   });
   const [exibirSenha, setExibirSenha] = useState(true);
+  const [logando, setLogando] = useState(false);
+  const [dialogVisivel, setDialogVisivel] = useState(false);
+  const [mensagemErro, setMensagemErro] = useState('');
+  const {signIn} = useContext<any>(AuthContext);
 
   useEffect(() => {
     console.log('redenrizou');
   }, []);
 
   useEffect(() => {
+    if (dialogVisivel) {
+      setLogando(false);
+    }
+  }, [dialogVisivel]);
+
+  useEffect(() => {
     register('email');
     register('senha');
   }, [register]);
 
-  function onSubmit(data: Credencial) {
+  async function onSubmit(data: Credencial) {
     console.log(JSON.stringify(data));
-    navigation.navigate('Home');
+    setLogando(true);
+    const mensagem = await signIn(data);
+    if (mensagem === 'ok') {
+      navigation.navigate('Home');
+    } else {
+      setMensagemErro(mensagem);
+      setDialogVisivel(true);
+    }
   }
   //console.log(errors);
 
@@ -129,6 +150,11 @@ function SignIn({navigation, theme}: any) {
                 right={
                   <TextInput.Icon
                     icon="eye"
+                    color={
+                      exibirSenha
+                        ? theme.colors.onBackground
+                        : theme.colors.error
+                    }
                     onPress={() => setExibirSenha(previus => !previus)}
                   />
                 }
@@ -153,7 +179,8 @@ function SignIn({navigation, theme}: any) {
           <Button
             style={styles.button}
             mode="contained"
-            onPress={handleSubmit(onSubmit)}>
+            onPress={handleSubmit(onSubmit)}
+            loading={logando}>
             Entrar
           </Button>
           <Divider />
@@ -169,6 +196,15 @@ function SignIn({navigation, theme}: any) {
           </View>
         </>
       </ScrollView>
+      <Dialog visible={dialogVisivel} onDismiss={() => setDialogVisivel(false)}>
+        <Dialog.Icon icon="alert-circle-outline" size={60} />
+        <Dialog.Title style={styles.textDialog}>Erro</Dialog.Title>
+        <Dialog.Content>
+          <Text style={styles.textDialog} variant="bodyLarge">
+            {mensagemErro}
+          </Text>
+        </Dialog.Content>
+      </Dialog>
     </SafeAreaView>
   );
 }
@@ -209,5 +245,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'center',
+  },
+  textDialog: {
+    textAlign: 'center',
   },
 });
