@@ -22,6 +22,8 @@ import * as yup from 'yup';
 import {AuthContext} from '../context/AuthProvider';
 import {Credencial} from '../model/types';
 
+const requiredMessage = 'Campo obrigatório';
+
 /*
   /^
   (?=.*\d)              // deve conter ao menos um dígito
@@ -36,11 +38,11 @@ const schema = yup
   .shape({
     email: yup
       .string()
-      .required('O email é obrigatório')
+      .required(requiredMessage)
       .matches(/\S+@\S+\.\S+/, 'Email inválido'),
     senha: yup
       .string()
-      .required('A senha é obrigatória')
+      .required(requiredMessage)
       .matches(
         /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/,
         'A senha deve conter ao menos uma letra maiúscula, uma letra minúscula, um númeral, um caractere especial e um total de 8 caracteres',
@@ -68,10 +70,6 @@ function SignIn({navigation}: any) {
   const [dialogVisivel, setDialogVisivel] = useState(false);
   const [mensagemErro, setMensagemErro] = useState('');
   const {signIn} = useContext<any>(AuthContext);
-
-  useEffect(() => {
-    console.log('redenrizou');
-  }, []);
 
   useEffect(() => {
     if (dialogVisivel) {
@@ -187,8 +185,9 @@ function SignIn({navigation}: any) {
             style={styles.button}
             mode="contained"
             onPress={handleSubmit(onSubmit)}
-            loading={logando}>
-            Entrar
+            loading={logando}
+            disabled={logando}>
+            {!logando ? 'Entrar' : 'Entrando'}
           </Button>
           <Divider />
           <View style={styles.divCadastro}>
@@ -196,7 +195,7 @@ function SignIn({navigation}: any) {
             <Text
               style={{...styles.textCadastro, color: theme.colors.tertiary}}
               variant="labelMedium"
-              onPress={() => Alert.alert('Todo', 'ir para a tela cadatre-se')}>
+              onPress={() => navigation.navigate('SignUp')}>
               {' '}
               Cadastre-se.
             </Text>
