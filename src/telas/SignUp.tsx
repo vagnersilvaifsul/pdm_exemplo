@@ -73,7 +73,6 @@ export default function SignUp({navigation}: any) {
       'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50';
     data.curso = Curso.CSTSI;
     data.perfil = Perfil.Aluno;
-    data.senha = data.senha;
     const msg = await signUp(data);
     if (msg === 'ok') {
       setMensagem({
