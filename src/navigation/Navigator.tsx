@@ -19,7 +19,7 @@ const Tab = createBottomTabNavigator();
 
 const AuthStack = () => (
   <Stack.Navigator
-    initialRouteName="SignIn"
+    initialRouteName="Preload"
     screenOptions={{
       headerShown: false,
     }}>

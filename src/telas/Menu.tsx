@@ -10,8 +10,8 @@ export default function Menu({navigation}: any) {
   const {signOut} = useContext<any>(AuthContext);
   const [dialogVisivel, setDialogVisivel] = useState(false);
 
-  function sair() {
-    if (signOut()) {
+  async function sair() {
+    if (await signOut()) {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -19,20 +19,7 @@ export default function Menu({navigation}: any) {
         }),
       );
     } else {
-      <Dialog
-        visible={dialogVisivel}
-        onDismiss={() => {
-          setDialogVisivel(false);
-        }}>
-        <Dialog.Icon icon={'alert-circle-outline'} size={60} />
-        <Dialog.Title style={styles.textDialog}>'Ops!'</Dialog.Title>
-        <Dialog.Content>
-          <Text style={styles.textDialog} variant="bodyLarge">
-            'Estamos com problemas para realizar essa operação.\nPor favor,
-            contate o administrador.'
-          </Text>
-        </Dialog.Content>
-      </Dialog>;
+      setDialogVisivel(true);
     }
   }
 
@@ -53,6 +40,20 @@ export default function Menu({navigation}: any) {
         left={() => <List.Icon color={theme.colors.primary} icon="exit-run" />}
         onPress={sair}
       />
+      <Dialog
+        visible={dialogVisivel}
+        onDismiss={() => {
+          setDialogVisivel(false);
+        }}>
+        <Dialog.Icon icon={'alert-circle-outline'} size={60} />
+        <Dialog.Title style={styles.textDialog}>'Ops!'</Dialog.Title>
+        <Dialog.Content>
+          <Text style={styles.textDialog} variant="bodyLarge">
+            {`Estamos com problemas para realizar essa operação.\nPor favor,
+            contate o administrador.`}
+          </Text>
+        </Dialog.Content>
+      </Dialog>
     </View>
   );
 }

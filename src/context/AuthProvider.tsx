@@ -1,7 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import auth from '@react-native-firebase/auth';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import React, {createContext, useEffect, useState} from 'react';
+import React, {createContext, useState} from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {Credencial} from '../model/types';
 import {Usuario} from '../model/Usuario';
@@ -11,20 +10,8 @@ export const AuthContext = createContext({});
 
 //2. Cria o provedor do contexto e exporta states e funções
 export const AuthProvider = ({children}: any) => {
-  const [userAuth, setUserAuth] = useState({
-    authUser: auth().currentUser,
-  });
-  //ao montar o componente cria um listener para a autenticação do Firebase
-  useEffect(() => {
-    // cria um listener para o estado da sessão
-    const unsubscriber = auth().onAuthStateChanged(authUser => {
-      console.log(authUser);
-      setUserAuth({...userAuth, authUser}); //TODO: persistir o usuário no AsyncStorage
-    });
-    return () => {
-      unsubscriber(); //unsubscribe o listener ao desmontar
-    };
-  }, []);
+  //representa o usuário que está na sessão
+  const [userAuth, setUserAuth] = useState<FirebaseAuthTypes.User | null>(null);
 
   /*
     Cache criptografado do usuário
@@ -96,7 +83,7 @@ export const AuthProvider = ({children}: any) => {
 
   async function signOut(): Promise<string> {
     try {
-      setUserAuth({authUser: null});
+      setUserAuth(null);
       await EncryptedStorage.removeItem('credencial');
       if (auth().currentUser) {
         await auth().signOut();
@@ -129,7 +116,8 @@ export const AuthProvider = ({children}: any) => {
   }
 
   return (
-    <AuthContext.Provider value={{userAuth, signUp, signIn, signOut}}>
+    <AuthContext.Provider
+      value={{userAuth, setUserAuth, signUp, signIn, signOut}}>
       {children}
     </AuthContext.Provider>
   );
