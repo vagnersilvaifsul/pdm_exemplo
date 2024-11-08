@@ -17,7 +17,8 @@ export const AuthProvider = ({children}: any) => {
   useEffect(() => {
     // cria um listener para o estado da sessão
     const unsubscriber = auth().onAuthStateChanged(authUser => {
-      setUserAuth({...userAuth, authUser});
+      console.log(authUser);
+      setUserAuth({...userAuth, authUser}); //TODO: persistir o usuário no AsyncStorage
     });
     return () => {
       unsubscriber(); //unsubscribe o listener ao desmontar
@@ -50,7 +51,7 @@ export const AuthProvider = ({children}: any) => {
 
   async function signIn(credencial: Credencial) {
     try {
-      if (!auth().currentUser?.emailVerified) {
+      if (auth().currentUser?.emailVerified) {
         return 'Você deve validar seu email para continuar.';
       }
       await auth().signInWithEmailAndPassword(
