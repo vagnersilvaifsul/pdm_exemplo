@@ -2,6 +2,7 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import React, {createContext, useEffect, useState} from 'react';
+import EncryptedStorage from 'react-native-encrypted-storage';
 import {Credencial} from '../model/types';
 import {Usuario} from '../model/Usuario';
 
@@ -24,6 +25,32 @@ export const AuthProvider = ({children}: any) => {
       unsubscriber(); //unsubscribe o listener ao desmontar
     };
   }, []);
+
+  /*
+    Cache criptografado do usuário
+  */
+  async function armazenaCredencialnaCache(credencial: Credencial) {
+    try {
+      await EncryptedStorage.setItem(
+        'credencial',
+        JSON.stringify({
+          email: credencial.email,
+          senha: credencial.senha,
+        }),
+      );
+    } catch (e) {
+      console.error('AuthProvider, storeCredencial: ' + e);
+    }
+  }
+
+  async function recuperaCredencialdaCache() {
+    try {
+      const credencial = await EncryptedStorage.getItem('credencial');
+      return credencial !== null ? JSON.parse(credencial) : null;
+    } catch (e) {
+      console.error('AuthProvider, retrieveUserSession: ' + e);
+    }
+  }
 
   /*
     Funções do processo de Autenticação
@@ -58,6 +85,7 @@ export const AuthProvider = ({children}: any) => {
         credencial.email,
         credencial.senha,
       );
+      await armazenaCredencialnaCache(credencial);
       return 'ok';
     } catch (e) {
       return launchServerMessageErro(e);
