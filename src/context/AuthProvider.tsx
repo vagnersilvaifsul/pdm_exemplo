@@ -29,7 +29,9 @@ export const AuthProvider = ({children}: any) => {
   /*
     Cache criptografado do usuário
   */
-  async function armazenaCredencialnaCache(credencial: Credencial) {
+  async function armazenaCredencialnaCache(
+    credencial: Credencial,
+  ): Promise<void> {
     try {
       await EncryptedStorage.setItem(
         'credencial',
@@ -43,7 +45,7 @@ export const AuthProvider = ({children}: any) => {
     }
   }
 
-  async function recuperaCredencialdaCache() {
+  async function recuperaCredencialdaCache(): Promise<string | undefined> {
     try {
       const credencial = await EncryptedStorage.getItem('credencial');
       return credencial !== null ? JSON.parse(credencial) : null;
@@ -55,7 +57,7 @@ export const AuthProvider = ({children}: any) => {
   /*
     Funções do processo de Autenticação
   */
-  async function signUp(usuario: Usuario) {
+  async function signUp(usuario: Usuario): Promise<string> {
     try {
       await auth().createUserWithEmailAndPassword(usuario.email, usuario.senha);
       await auth().currentUser?.sendEmailVerification();
@@ -76,7 +78,7 @@ export const AuthProvider = ({children}: any) => {
     }
   }
 
-  async function signIn(credencial: Credencial) {
+  async function signIn(credencial: Credencial): Promise<string> {
     try {
       if (auth().currentUser?.emailVerified) {
         return 'Você deve validar seu email para continuar.';
@@ -92,8 +94,21 @@ export const AuthProvider = ({children}: any) => {
     }
   }
 
+  async function signOut(): Promise<string> {
+    try {
+      setUserAuth({authUser: null});
+      await EncryptedStorage.removeItem('credencial');
+      if (auth().currentUser) {
+        await auth().signOut();
+      }
+      return 'ok';
+    } catch (e) {
+      return launchServerMessageErro(e);
+    }
+  }
+
   //função utilitária
-  function launchServerMessageErro(e: any) {
+  function launchServerMessageErro(e: any): string {
     console.log(e);
     switch (e.code) {
       case 'auth/invalid-credential':
@@ -114,7 +129,7 @@ export const AuthProvider = ({children}: any) => {
   }
 
   return (
-    <AuthContext.Provider value={{userAuth, signUp, signIn}}>
+    <AuthContext.Provider value={{userAuth, signUp, signIn, signOut}}>
       {children}
     </AuthContext.Provider>
   );
