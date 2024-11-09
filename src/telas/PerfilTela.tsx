@@ -1,4 +1,5 @@
 import {yupResolver} from '@hookform/resolvers/yup';
+import {CommonActions} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {Alert, Image, ScrollView, StyleSheet, View} from 'react-native';
@@ -6,8 +7,7 @@ import {Button, Dialog, Text, TextInput, useTheme} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import * as yup from 'yup';
 import {AuthContext} from '../context/AuthProvider';
-import {Curso} from '../model/Curso';
-import {Perfil} from '../model/Perfil';
+import {UserContext} from '../context/UserProvider';
 import {Usuario} from '../model/Usuario';
 
 const requiredMessage = 'Campo obrigatório';
@@ -37,7 +37,7 @@ const schema = yup
   })
   .required();
 
-export default function SignUp({navigation}: any) {
+export default function PerfilTela({navigation}: any) {
   const theme = useTheme();
   const {
     control,
@@ -56,10 +56,13 @@ export default function SignUp({navigation}: any) {
   });
   const [exibirSenha, setExibirSenha] = useState(true);
   const [requisitando, setRequisitando] = useState(false);
-  const [dialogVisivel, setDialogVisivel] = useState(false);
+  const [dialogErroVisivel, setDialogErroVisivel] = useState(false);
+  const [dialogExcluirVisivel, setDialogExcluirVisivel] = useState(false);
   const [mensagem, setMensagem] = useState({tipo: '', mensagem: ''});
-  const {signUp} = useContext<any>(AuthContext);
+  const {userAuth} = useContext<any>(AuthContext);
+  const {update, del} = useContext<any>(UserContext);
 
+  //TODO: verificar se o usuário está logado e pegar o uid dele
   useEffect(() => {
     register('nome');
     register('email');
@@ -68,23 +71,40 @@ export default function SignUp({navigation}: any) {
   }, [register]);
 
   async function onSubmit(data: Usuario) {
+    console.log('Atualizar perfil');
     setRequisitando(true);
-    data.urlFoto =
-      'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50';
-    data.curso = Curso.CSTSI;
-    data.perfil = Perfil.Aluno;
-    const msg = await signUp(data);
+    const msg = await update(data);
     if (msg === 'ok') {
       setMensagem({
         tipo: 'ok',
         mensagem:
-          'Show! Você foi cadastrado com sucesso. Verifique seu email para validar sua conta.',
+          'Show! Seu perfil foi atualizado com sucesso. Verifique seu email para validar sua conta.',
       });
-      setDialogVisivel(true);
+      setDialogErroVisivel(true);
       setRequisitando(false);
     } else {
       setMensagem({tipo: 'erro', mensagem: msg});
-      setDialogVisivel(true);
+      setDialogErroVisivel(true);
+      setRequisitando(false);
+    }
+  }
+
+  async function excluirConta(data: Usuario) {
+    console.log('Excluir conta');
+    setDialogExcluirVisivel(true); //TODO: ver pq não está abrindo o dialog
+    setRequisitando(true);
+    //const msg = await del(data.uid);
+    if ('ok' === 'ok') {
+      setRequisitando(false);
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'AuthStack'}],
+        }),
+      );
+    } else {
+      setMensagem({tipo: 'erro', mensagem: 'ops! algo deu errado'});
+      setDialogErroVisivel(true);
       setRequisitando(false);
     }
   }
@@ -235,14 +255,41 @@ export default function SignUp({navigation}: any) {
             onPress={handleSubmit(onSubmit)}
             loading={requisitando}
             disabled={requisitando}>
-            {!requisitando ? 'Cadastrar' : 'Cadastrando'}
+            {!requisitando ? 'Atualizar' : 'Atualizando'}
+          </Button>
+          <Button
+            style={styles.buttonOthers}
+            mode="outlined"
+            onPress={handleSubmit(excluirConta)}
+            loading={requisitando}
+            disabled={requisitando}>
+            {!requisitando ? 'Excluir' : 'Excluindo'}
           </Button>
         </>
       </ScrollView>
       <Dialog
-        visible={dialogVisivel}
+        visible={dialogExcluirVisivel}
         onDismiss={() => {
-          setDialogVisivel(false);
+          setDialogErroVisivel(false);
+        }}>
+        <Dialog.Icon icon={'alert-circle-outline'} size={60} />
+        <Dialog.Title style={styles.textDialog}>{'Ops!'}</Dialog.Title>
+        <Dialog.Content>
+          <Text style={styles.textDialog} variant="bodyLarge">
+            {
+              'Você tem certeza que deseja excluir sua conta?\nEsta operação será irreversível.'
+            }
+          </Text>
+        </Dialog.Content>
+        <Dialog.Actions>
+          <Button onPress={() => setDialogExcluirVisivel(false)}>Cancel</Button>
+          <Button onPress={() => console.log('Ok')}>Ok</Button>
+        </Dialog.Actions>
+      </Dialog>
+      <Dialog
+        visible={dialogErroVisivel}
+        onDismiss={() => {
+          setDialogErroVisivel(false);
           if (mensagem.tipo === 'ok') {
             navigation.goBack();
           }
@@ -295,7 +342,10 @@ const styles = StyleSheet.create({
     width: 350,
   },
   button: {
-    marginTop: 50,
+    marginTop: 40,
+  },
+  buttonOthers: {
+    marginTop: 20,
     marginBottom: 30,
   },
   divButtonsImage: {

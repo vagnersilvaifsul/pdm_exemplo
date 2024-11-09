@@ -8,7 +8,7 @@ import {Icon, useTheme} from 'react-native-paper';
 import Aluno from '../telas/Aluno';
 import Alunos from '../telas/Alunos';
 import Menu from '../telas/Menu';
-import Perfil from '../telas/Perfil';
+import Perfil from '../telas/PerfilTela';
 import Preload from '../telas/Preload';
 import RecuperarSenha from '../telas/RecuperarSenha';
 import SignIn from '../telas/SignIn';
