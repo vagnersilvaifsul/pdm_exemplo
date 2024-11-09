@@ -19,6 +19,8 @@ export const AuthProvider = ({children}: any) => {
   async function armazenaCredencialnaCache(
     credencial: Credencial,
   ): Promise<void> {
+    console.log('armazenaCredencialnaCache');
+    console.log(credencial);
     try {
       await EncryptedStorage.setItem(
         'credencial',
@@ -35,6 +37,8 @@ export const AuthProvider = ({children}: any) => {
   async function recuperaCredencialdaCache(): Promise<string | undefined> {
     try {
       const credencial = await EncryptedStorage.getItem('credencial');
+      console.log('recuperaCredencialdaCache');
+      console.log(credencial);
       return credencial !== null ? JSON.parse(credencial) : null;
     } catch (e) {
       console.error('AuthProvider, retrieveUserSession: ' + e);
@@ -117,7 +121,14 @@ export const AuthProvider = ({children}: any) => {
 
   return (
     <AuthContext.Provider
-      value={{userAuth, setUserAuth, signUp, signIn, signOut}}>
+      value={{
+        userAuth,
+        setUserAuth,
+        signUp,
+        signIn,
+        signOut,
+        recuperaCredencialdaCache,
+      }}>
       {children}
     </AuthContext.Provider>
   );

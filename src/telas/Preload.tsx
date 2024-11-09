@@ -6,7 +6,8 @@ import {Image, StyleSheet, View} from 'react-native';
 import {AuthContext} from '../context/AuthProvider';
 
 export default function Preload({navigation}: any) {
-  const {setUserAuth} = useContext<any>(AuthContext);
+  const {setUserAuth, recuperaCredencialdaCache, signIn} =
+    useContext<any>(AuthContext);
 
   //ao montar o componente cria um listener para a autenticação do Firebase
   useEffect(() => {
@@ -15,6 +16,7 @@ export default function Preload({navigation}: any) {
       console.log('Preload');
       console.log(authUser);
       if (authUser) {
+        //se o usuário continua com a sessão no Firebase vai direto para a tela principal
         setUserAuth(authUser);
         navigation.dispatch(
           CommonActions.reset({
@@ -23,6 +25,30 @@ export default function Preload({navigation}: any) {
           }),
         );
       } else {
+        logar(); //se não, tenta logar com as credenciais armazenadas
+      }
+    });
+    return () => {
+      unsubscriber(); //unsubscribe o listener ao desmontar
+    };
+  }, []);
+
+  async function logar() {
+    const credencial = await recuperaCredencialdaCache();
+    console.log('logar');
+    console.log(credencial);
+    if (credencial !== 'null') {
+      //se tem credenciais armazenadas tenta logar
+      const mensagem = await signIn(credencial);
+      if (mensagem === 'ok') {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: 'AppStack'}],
+          }),
+        );
+      } else {
+        //se não consegue logar vai para a tela de login
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
@@ -30,11 +56,8 @@ export default function Preload({navigation}: any) {
           }),
         );
       }
-    });
-    return () => {
-      unsubscriber(); //unsubscribe o listener ao desmontar
-    };
-  }, []);
+    }
+  }
 
   return (
     <View style={styles.container}>
