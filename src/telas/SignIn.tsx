@@ -90,7 +90,7 @@ function SignIn({navigation}: any) {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{name: 'AppStack'}],
+          routes: [{name: 'Preload'}],
         }),
       );
     } else {

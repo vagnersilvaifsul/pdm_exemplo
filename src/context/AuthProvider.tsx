@@ -19,8 +19,6 @@ export const AuthProvider = ({children}: any) => {
   async function armazenaCredencialnaCache(
     credencial: Credencial,
   ): Promise<void> {
-    console.log('armazenaCredencialnaCache');
-    console.log(credencial);
     try {
       await EncryptedStorage.setItem(
         'credencial',
@@ -34,14 +32,13 @@ export const AuthProvider = ({children}: any) => {
     }
   }
 
-  async function recuperaCredencialdaCache(): Promise<string | undefined> {
+  async function recuperaCredencialdaCache(): Promise<null | string> {
     try {
       const credencial = await EncryptedStorage.getItem('credencial');
-      console.log('recuperaCredencialdaCache');
-      console.log(credencial);
-      return credencial !== null ? JSON.parse(credencial) : null;
+      return credencial ? JSON.parse(credencial) : null;
     } catch (e) {
       console.error('AuthProvider, retrieveUserSession: ' + e);
+      return null;
     }
   }
 
@@ -71,9 +68,6 @@ export const AuthProvider = ({children}: any) => {
 
   async function signIn(credencial: Credencial): Promise<string> {
     try {
-      if (auth().currentUser?.emailVerified) {
-        return 'Você deve validar seu email para continuar.';
-      }
       await auth().signInWithEmailAndPassword(
         credencial.email,
         credencial.senha,

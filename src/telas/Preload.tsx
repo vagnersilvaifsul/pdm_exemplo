@@ -4,26 +4,33 @@ import {CommonActions} from '@react-navigation/native';
 import React, {useContext, useEffect} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {AuthContext} from '../context/AuthProvider';
+import {UserContext} from '../context/UserProvider';
 
 export default function Preload({navigation}: any) {
   const {setUserAuth, recuperaCredencialdaCache, signIn} =
     useContext<any>(AuthContext);
+  const {getUser} = useContext<any>(UserContext);
 
   //ao montar o componente cria um listener para a autenticação do Firebase
   useEffect(() => {
     // cria um listener para o estado da sessão
-    const unsubscriber = auth().onAuthStateChanged(authUser => {
+    const unsubscriber = auth().onAuthStateChanged(async authUser => {
       console.log('Preload');
       console.log(authUser);
+      //se há um usuário autenticado
       if (authUser) {
-        //se o usuário continua com a sessão no Firebase vai direto para a tela principal
-        setUserAuth(authUser);
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{name: 'AppStack'}],
-          }),
-        );
+        //1o. Verifica se o email foi verificado
+        if (authUser.emailVerified) {
+          //2o. Se o email foi verificado, busca os detalhes do usuário no Firestore e os em uma state do armazena no contexto AuthProvider
+          await buscaUsuario();
+        } else {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'SignIn'}],
+            }),
+          );
+        }
       } else {
         logar(); //se não, tenta logar com as credenciais armazenadas
       }
@@ -35,18 +42,11 @@ export default function Preload({navigation}: any) {
 
   async function logar() {
     const credencial = await recuperaCredencialdaCache();
-    console.log('logar');
-    console.log(credencial);
     if (credencial !== 'null') {
       //se tem credenciais armazenadas tenta logar
       const mensagem = await signIn(credencial);
       if (mensagem === 'ok') {
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{name: 'AppStack'}],
-          }),
-        );
+        await buscaUsuario();
       } else {
         //se não consegue logar vai para a tela de login
         navigation.dispatch(
@@ -56,6 +56,22 @@ export default function Preload({navigation}: any) {
           }),
         );
       }
+    }
+  }
+
+  async function buscaUsuario() {
+    const usuario = await getUser();
+    const credencial = await recuperaCredencialdaCache();
+    if (usuario) {
+      usuario.senha = credencial?.senha;
+      console.log(usuario);
+      setUserAuth(usuario);
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'AppStack'}],
+        }),
+      );
     }
   }
 

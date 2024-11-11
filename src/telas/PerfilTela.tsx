@@ -1,5 +1,4 @@
 import {yupResolver} from '@hookform/resolvers/yup';
-import {CommonActions} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {Alert, Image, ScrollView, StyleSheet, View} from 'react-native';
@@ -8,6 +7,8 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import * as yup from 'yup';
 import {AuthContext} from '../context/AuthProvider';
 import {UserContext} from '../context/UserProvider';
+import {Curso} from '../model/Curso';
+import {Perfil} from '../model/Perfil';
 import {Usuario} from '../model/Usuario';
 
 const requiredMessage = 'Campo obrigatório';
@@ -46,10 +47,10 @@ export default function PerfilTela({navigation}: any) {
     formState: {errors},
   } = useForm<any>({
     defaultValues: {
-      nome: '',
-      email: '',
-      senha: '',
-      confirmar_senha: '',
+      nome: 'Vagner',
+      email: 'vagnersilva@ifsul.edu.br',
+      senha: 'Teste12*',
+      confirmar_senha: 'Teste12*',
     },
     mode: 'onSubmit',
     resolver: yupResolver(schema),
@@ -73,8 +74,12 @@ export default function PerfilTela({navigation}: any) {
   async function onSubmit(data: Usuario) {
     console.log('Atualizar perfil');
     setRequisitando(true);
-    const msg = await update(data);
-    if (msg === 'ok') {
+    data.urlFoto =
+      'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50';
+    data.curso = Curso.CSTSI;
+    data.perfil = Perfil.Aluno;
+    //const msg = await update(data);
+    if ('ok' === 'ok') {
       setMensagem({
         tipo: 'ok',
         mensagem:
@@ -96,12 +101,12 @@ export default function PerfilTela({navigation}: any) {
     //const msg = await del(data.uid);
     if ('ok' === 'ok') {
       setRequisitando(false);
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{name: 'AuthStack'}],
-        }),
-      );
+      // navigation.dispatch(
+      //   CommonActions.reset({
+      //     index: 0,
+      //     routes: [{name: 'AuthStack'}],
+      //   }),
+      // );
     } else {
       setMensagem({tipo: 'erro', mensagem: 'ops! algo deu errado'});
       setDialogErroVisivel(true);
