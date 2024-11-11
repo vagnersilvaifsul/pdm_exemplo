@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import auth from '@react-native-firebase/auth';
 import {CommonActions} from '@react-navigation/native';
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
+import {Dialog, Text} from 'react-native-paper';
 import {AuthContext} from '../context/AuthProvider';
 import {UserContext} from '../context/UserProvider';
 
@@ -10,6 +11,10 @@ export default function Preload({navigation}: any) {
   const {setUserAuth, recuperaCredencialdaCache, signIn} =
     useContext<any>(AuthContext);
   const {getUser} = useContext<any>(UserContext);
+  const [dialogVisivel, setDialogVisivel] = useState(false);
+  const [mensagemErro, setMensagemErro] = useState(
+    'Você precisa verificar seu email para continuar',
+  );
 
   //ao montar o componente cria um listener para a autenticação do Firebase
   useEffect(() => {
@@ -24,12 +29,7 @@ export default function Preload({navigation}: any) {
           //2o. Se o email foi verificado, busca os detalhes do usuário no Firestore e os em uma state do armazena no contexto AuthProvider
           await buscaUsuario();
         } else {
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{name: 'SignIn'}],
-            }),
-          );
+          setDialogVisivel(true);
         }
       } else {
         logar(); //se não, tenta logar com as credenciais armazenadas
@@ -61,9 +61,7 @@ export default function Preload({navigation}: any) {
 
   async function buscaUsuario() {
     const usuario = await getUser();
-    const credencial = await recuperaCredencialdaCache();
     if (usuario) {
-      usuario.senha = credencial?.senha;
       console.log(usuario);
       setUserAuth(usuario);
       navigation.dispatch(
@@ -75,6 +73,16 @@ export default function Preload({navigation}: any) {
     }
   }
 
+  function irParaSignIn() {
+    setDialogVisivel(false);
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'SignIn'}],
+      }),
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Image
@@ -82,6 +90,15 @@ export default function Preload({navigation}: any) {
         source={require('../assets/images/logo512.png')}
         accessibilityLabel="logo do app"
       />
+      <Dialog visible={dialogVisivel} onDismiss={irParaSignIn}>
+        <Dialog.Icon icon="alert-circle-outline" size={60} />
+        <Dialog.Title style={styles.textDialog}>Erro</Dialog.Title>
+        <Dialog.Content>
+          <Text style={styles.textDialog} variant="bodyLarge">
+            {mensagemErro}
+          </Text>
+        </Dialog.Content>
+      </Dialog>
     </View>
   );
 }
@@ -95,5 +112,8 @@ const styles = StyleSheet.create({
   imagem: {
     width: 250,
     height: 250,
+  },
+  textDialog: {
+    textAlign: 'center',
   },
 });

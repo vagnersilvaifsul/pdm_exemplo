@@ -7,7 +7,7 @@ import {AuthContext} from './AuthProvider';
 export const UserContext = createContext({});
 
 export const UserProvider = ({children}: any) => {
-  const {signOut} = useContext<any>(AuthContext);
+  const {signOut, setUserAuth} = useContext<any>(AuthContext);
 
   async function update(usuario: Usuario): Promise<string> {
     try {
@@ -19,16 +19,18 @@ export const UserProvider = ({children}: any) => {
       //   }
       // }
       const usuarioFirestore = {
+        curso: usuario.curso,
         email: usuario.email,
         nome: usuario.nome,
-        urlFoto: usuario.urlFoto,
-        curso: usuario.curso,
         perfil: usuario.perfil,
+        urlFoto: usuario.urlFoto,
       };
       await firestore()
         .collection('usuarios')
         .doc(auth().currentUser?.uid)
-        .set(usuarioFirestore);
+        .set(usuarioFirestore, {merge: true});
+      const usuarioAtualizado = await getUser();
+      setUserAuth(usuarioAtualizado);
       return 'ok';
     } catch (e) {
       console.error(e);
@@ -40,7 +42,7 @@ export const UserProvider = ({children}: any) => {
     try {
       await firestore().collection('usuarios').doc(uid).delete();
       await auth().currentUser?.delete();
-      await signOut(); //chama o signOut do AuthProvider para limpar a cache
+      //await signOut(); //chama o signOut do AuthProvider para limpar a cache
       return 'ok';
     } catch (e) {
       console.error(e);
