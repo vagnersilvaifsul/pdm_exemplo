@@ -101,11 +101,7 @@ function SignIn({navigation}: any) {
   //console.log(errors);
 
   return (
-    <SafeAreaView
-      style={{
-        ...styles.container,
-        backgroundColor: theme.colors.background,
-      }}>
+    <SafeAreaView style={styles.container}>
       <ScrollView>
         <>
           <Image
