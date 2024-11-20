@@ -92,6 +92,16 @@ export const AuthProvider = ({children}: any) => {
     }
   }
 
+  async function recuperarSenha(email: string): Promise<string> {
+    try {
+      await auth().sendPasswordResetEmail(email);
+      return 'ok';
+    } catch (e) {
+      console.error(e);
+      return launchServerMessageErro(e);
+    }
+  }
+
   //função utilitária
   function launchServerMessageErro(e: any): string {
     console.log(e);
@@ -122,6 +132,7 @@ export const AuthProvider = ({children}: any) => {
         signIn,
         signOut,
         recuperaCredencialdaCache,
+        recuperarSenha,
       }}>
       {children}
     </AuthContext.Provider>

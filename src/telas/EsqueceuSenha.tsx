@@ -1,9 +1,10 @@
 import {yupResolver} from '@hookform/resolvers/yup';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {StyleSheet, View} from 'react-native';
-import {Button, Text, TextInput, useTheme} from 'react-native-paper';
+import {Button, Dialog, Text, TextInput, useTheme} from 'react-native-paper';
 import * as yup from 'yup';
+import {AuthContext} from '../context/AuthProvider';
 
 const requiredMessage = 'Campo obrigatório';
 
@@ -14,7 +15,7 @@ const schema = yup.object().shape({
     .matches(/\S+@\S+\.\S+/, 'Email inválido'),
 });
 
-export default function EsqueceuSenha() {
+export default function EsqueceuSenha({navigation}: any) {
   const theme = useTheme();
   const {
     control,
@@ -28,11 +29,27 @@ export default function EsqueceuSenha() {
     resolver: yupResolver(schema),
   });
   const [requisitando, setRequisitando] = useState(false);
+  const {recuperarSenha} = useContext<any>(AuthContext);
+  const [dialogVisivel, setDialogVisivel] = useState(false);
+  const [mensagem, setMensagem] = useState({tipo: '', mensagem: ''});
 
-  function onSubmit(data: any) {
+  async function onSubmit(data: any) {
     setRequisitando(true);
     console.log(data);
-    setRequisitando(false);
+    const msg = await recuperarSenha(data.email);
+    if (msg === 'ok') {
+      setRequisitando(false);
+      setMensagem({
+        tipo: 'ok',
+        mensagem:
+          'Show! Um email foi enviado e pode estar na caixa de entrada ou caixa de spam.',
+      });
+      setDialogVisivel(true);
+    } else {
+      setRequisitando(false);
+      setMensagem({tipo: 'erro', mensagem: msg});
+      setDialogVisivel(true);
+    }
   }
 
   return (
@@ -70,6 +87,24 @@ export default function EsqueceuSenha() {
         disabled={requisitando}>
         {!requisitando ? 'Enviar' : 'Enviando'}
       </Button>
+      <Dialog
+        visible={dialogVisivel}
+        onDismiss={() => {
+          setDialogVisivel(false);
+          if (mensagem.tipo === 'ok') {
+            navigation.goBack();
+          }
+        }}>
+        <Dialog.Icon icon="alert-circle-outline" size={60} />
+        <Dialog.Title style={styles.textDialog}>
+          {mensagem.tipo === 'ok' ? 'Informação' : 'Erro'}
+        </Dialog.Title>
+        <Dialog.Content>
+          <Text style={styles.textDialog} variant="bodyLarge">
+            {mensagem.mensagem}
+          </Text>
+        </Dialog.Content>
+      </Dialog>
     </View>
   );
 }
@@ -93,5 +128,8 @@ const styles = StyleSheet.create({
     marginTop: 50,
     marginBottom: 30,
     width: 350,
+  },
+  textDialog: {
+    textAlign: 'center',
   },
 });
