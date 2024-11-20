@@ -51,6 +51,7 @@ export default function PerfilTela({navigation}: any) {
   const [dialogExcluirVisivel, setDialogExcluirVisivel] = useState(false);
   const [mensagem, setMensagem] = useState({tipo: '', mensagem: ''});
   const {update, del} = useContext<any>(UserContext);
+  const [urlDevice, setUrlDevice] = useState('');
 
   useEffect(() => {
     register('nome');
@@ -107,7 +108,14 @@ export default function PerfilTela({navigation}: any) {
         <>
           <Image
             style={styles.image}
-            source={require('../assets/images/logo512.png')}
+            source={
+              urlDevice !== ''
+                ? {uri: urlDevice}
+                : userAuth.urlFoto !== ''
+                ? {uri: userAuth.urlFoto}
+                : require('../assets/images/person.png')
+            }
+            loadingIndicatorSource={require('../assets/images/person.png')}
           />
           <View style={styles.divButtonsImage}>
             <Button
