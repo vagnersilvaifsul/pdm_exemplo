@@ -5,6 +5,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {StatusBar} from 'react-native';
 import {Icon, useTheme} from 'react-native-paper';
+import AlteraSenha from '../telas/AlteraSenha';
 import Aluno from '../telas/Aluno';
 import Alunos from '../telas/Alunos';
 import EsqueceuSenha from '../telas/EsqueceuSenha';
@@ -86,6 +87,7 @@ export default function Navigator() {
           }}
         />
         <Stack.Screen component={Perfil} name="Perfil" />
+        <Stack.Screen component={AlteraSenha} name="AlteraSenha" />
       </Stack.Navigator>
     </NavigationContainer>
   );

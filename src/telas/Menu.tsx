@@ -35,6 +35,18 @@ export default function Menu({navigation}: any) {
       />
       <Divider />
       <List.Item
+        title="Alterar Senha"
+        description="Altere sua senha"
+        left={() => (
+          <List.Icon
+            color={theme.colors.primary}
+            icon="eye-arrow-right-outline"
+          />
+        )}
+        onPress={() => navigation.navigate('AlteraSenha')}
+      />
+      <Divider />
+      <List.Item
         title="Sair"
         description="Finaliza sua sessão no aplicativo"
         left={() => <List.Icon color={theme.colors.primary} icon="exit-run" />}
