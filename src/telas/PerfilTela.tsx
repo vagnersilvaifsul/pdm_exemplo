@@ -2,9 +2,10 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {CommonActions} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
-import {Alert, Image, ScrollView, StyleSheet, View} from 'react-native';
+import {Image, ScrollView, StyleSheet, View} from 'react-native';
 import {
   ImageLibraryOptions,
+  launchCamera,
   launchImageLibrary,
 } from 'react-native-image-picker';
 import {Button, Dialog, Text, TextInput, useTheme} from 'react-native-paper';
@@ -124,6 +125,24 @@ export default function PerfilTela({navigation}: any) {
     });
   };
 
+  function tiraFoto() {
+    const options: ImageLibraryOptions = {
+      mediaType: 'photo',
+    };
+    launchCamera(options, response => {
+      if (response.errorCode) {
+        setMensagem({tipo: 'erro', mensagem: 'Ops! Erro ao tirar a foto'});
+      } else if (response.didCancel) {
+        setMensagem({tipo: 'ok', mensagem: 'Ok, você cancelou.'});
+      } else {
+        const path = response.assets?.[0].uri;
+        console.log('tiraFoto');
+        console.log(path);
+        setUrlDevice(path); //armazena a uri para a imagem no device
+      }
+    });
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -151,9 +170,7 @@ export default function PerfilTela({navigation}: any) {
               style={styles.buttonImage}
               mode="outlined"
               icon="camera"
-              onPress={() =>
-                Alert.alert('Vamos ver isso em upload de imagens')
-              }>
+              onPress={() => tiraFoto()}>
               Foto
             </Button>
           </View>
