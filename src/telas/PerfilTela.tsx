@@ -69,8 +69,8 @@ export default function PerfilTela({navigation}: any) {
     console.log('Atualizar perfil');
     setRequisitando(true);
     data.urlFoto =
-      'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50';
-    const msg = await update(data);
+      'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50'; //uma imagem fake para ver como fica durante o dev
+    const msg = await update(data, urlDevice);
     if (msg === 'ok') {
       setMensagem({
         tipo: 'ok',

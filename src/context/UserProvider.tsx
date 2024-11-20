@@ -1,5 +1,7 @@
+import ImageResizer from '@bam.tech/react-native-image-resizer';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 import React, {createContext, useContext} from 'react';
 import {Usuario} from '../model/Usuario';
 import {AuthContext} from './AuthProvider';
@@ -7,17 +9,16 @@ import {AuthContext} from './AuthProvider';
 export const UserContext = createContext({});
 
 export const UserProvider = ({children}: any) => {
-  const {signOut, setUserAuth} = useContext<any>(AuthContext);
+  const {setUserAuth} = useContext<any>(AuthContext);
 
-  async function update(usuario: Usuario): Promise<string> {
+  async function update(usuario: Usuario, urlDevice: string): Promise<string> {
     try {
-      //TODO: vai utilizar quando for salvar a imagem no storage
-      // if (urlDevice !== '') {
-      //   user.urlFoto = await sendImageToStorage(urlDevice, usuario);
-      //   if (!usuario.urlFoto) {
-      //     return 'Erro ao atualizar o usuário. Contate o suporte.'; //não deixa salvar ou atualizar se não realizar todos os passpos para enviar a imagem para o storage
-      //   }
-      // }
+      if (urlDevice !== '') {
+        usuario.urlFoto = await sendImageToStorage(usuario, urlDevice);
+        if (!usuario.urlFoto) {
+          return 'Erro ao atualizar o usuário. Contate o suporte.'; //não deixa salvar ou atualizar se não realizar todos os passos para enviar a imagem para o storage
+        }
+      }
       const usuarioFirestore = {
         curso: usuario.curso,
         email: usuario.email,
@@ -38,11 +39,52 @@ export const UserProvider = ({children}: any) => {
     }
   }
 
+  //urlDevice: qual imagem deve ser enviada via upload
+  async function sendImageToStorage(
+    usuario: Usuario,
+    urlDevice: string,
+  ): Promise<string> {
+    //1. Redimensiona e compacta a imagem
+    let imageRedimencionada = await ImageResizer.createResizedImage(
+      urlDevice,
+      150,
+      200,
+      'PNG',
+      80,
+    );
+    //2. e prepara o path onde ela deve ser salva no storage
+    const pathToStorage = `imagens/usuarios/${
+      auth().currentUser?.uid
+    }/foto.png`;
+
+    //3. Envia para o storage
+    let url: string | null = ''; //local onde a imagem será salva no Storage
+    const task = storage().ref(pathToStorage).putFile(imageRedimencionada?.uri);
+    task.on('state_changed', taskSnapshot => {
+      //Para acompanhar o upload, se necessário
+      // console.log(
+      //   'Transf:\n' +
+      //     `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      // );
+    });
+
+    //4. Busca a URL gerada pelo Storage
+    await task.then(async () => {
+      //se a task finalizar com sucesso, busca a url
+      url = await storage().ref(pathToStorage).getDownloadURL();
+    });
+    //5. Pode dar zebra, então pega a exceção
+    task.catch(e => {
+      console.error('UserProvider, sendImageToStorage: ' + e);
+      url = null;
+    });
+    return url;
+  }
+
   async function del(uid: string): Promise<string> {
     try {
       await firestore().collection('usuarios').doc(uid).delete();
       await auth().currentUser?.delete();
-      //await signOut(); //chama o signOut do AuthProvider para limpar a cache
       return 'ok';
     } catch (e) {
       console.error(e);
