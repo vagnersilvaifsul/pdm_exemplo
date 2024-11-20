@@ -7,10 +7,10 @@ import {StatusBar} from 'react-native';
 import {Icon, useTheme} from 'react-native-paper';
 import Aluno from '../telas/Aluno';
 import Alunos from '../telas/Alunos';
+import EsqueceuSenha from '../telas/EsqueceuSenha';
 import Menu from '../telas/Menu';
 import Perfil from '../telas/PerfilTela';
 import Preload from '../telas/Preload';
-import RecuperarSenha from '../telas/RecuperarSenha';
 import SignIn from '../telas/SignIn';
 import SignUp from '../telas/SignUp';
 
@@ -26,7 +26,7 @@ const AuthStack = () => (
     <Stack.Screen component={Preload} name="Preload" />
     <Stack.Screen component={SignIn} name="SignIn" />
     <Stack.Screen component={SignUp} name="SignUp" />
-    <Stack.Screen component={RecuperarSenha} name="RecuperarSenha" />
+    <Stack.Screen component={EsqueceuSenha} name="EsqueceuSenha" />
   </Stack.Navigator>
 );
 

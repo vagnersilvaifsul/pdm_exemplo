@@ -2,14 +2,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {CommonActions} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
-import {
-  Alert,
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {Image, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import {
   Button,
   Dialog,
@@ -175,9 +168,7 @@ function SignIn({navigation}: any) {
           <Text
             style={{...styles.textEsqueceuSenha, color: theme.colors.tertiary}}
             variant="labelMedium"
-            onPress={() =>
-              Alert.alert('Todo', 'ir para a tela esqueceu senha')
-            }>
+            onPress={() => navigation.navigate('EsqueceuSenha')}>
             Esqueceu sua senha?
           </Text>
           <Button
