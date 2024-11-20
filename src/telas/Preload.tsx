@@ -26,7 +26,7 @@ export default function Preload({navigation}: any) {
       if (authUser) {
         //1o. Verifica se o email foi verificado
         if (authUser.emailVerified) {
-          //2o. Se o email foi verificado, busca os detalhes do usuário no Firestore e os em uma state do armazena no contexto AuthProvider
+          //2o. Se o email foi verificado, busca os detalhes do usuário no Firestore e os armazena em uma state do armazena no contexto AuthProvider
           await buscaUsuario();
         } else {
           setDialogVisivel(true);
