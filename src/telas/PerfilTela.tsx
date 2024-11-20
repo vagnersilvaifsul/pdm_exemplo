@@ -52,6 +52,8 @@ export default function PerfilTela({navigation}: any) {
     resolver: yupResolver(schema),
   });
   const [requisitando, setRequisitando] = useState(false);
+  const [atualizando, setAtualizando] = useState(false);
+  const [excluindo, setExcluindo] = useState(false);
   const [dialogErroVisivel, setDialogErroVisivel] = useState(false);
   const [dialogExcluirVisivel, setDialogExcluirVisivel] = useState(false);
   const [mensagem, setMensagem] = useState({tipo: '', mensagem: ''});
@@ -65,9 +67,10 @@ export default function PerfilTela({navigation}: any) {
     register('perfil');
   }, [register]);
 
-  async function onSubmit(data: Usuario) {
+  async function atualizaPerfil(data: Usuario) {
     console.log('Atualizar perfil');
     setRequisitando(true);
+    setAtualizando(true);
     data.urlFoto =
       'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50'; //uma imagem fake para ver como fica durante o dev
     const msg = await update(data, urlDevice);
@@ -78,10 +81,12 @@ export default function PerfilTela({navigation}: any) {
       });
       setDialogErroVisivel(true);
       setRequisitando(false);
+      setAtualizando(false);
     } else {
       setMensagem({tipo: 'erro', mensagem: msg});
       setDialogErroVisivel(true);
       setRequisitando(false);
+      setAtualizando(false);
     }
   }
 
@@ -92,6 +97,7 @@ export default function PerfilTela({navigation}: any) {
   async function excluirConta() {
     setDialogExcluirVisivel(false);
     setRequisitando(true);
+    setExcluindo(true);
     const msg = await del(userAuth.uid);
     if (msg === 'ok') {
       navigation.dispatch(
@@ -104,6 +110,7 @@ export default function PerfilTela({navigation}: any) {
       setMensagem({tipo: 'erro', mensagem: 'ops! algo deu errado'});
       setDialogErroVisivel(true);
       setRequisitando(false);
+      setExcluindo(false);
     }
   }
 
@@ -276,10 +283,10 @@ export default function PerfilTela({navigation}: any) {
           <Button
             style={styles.button}
             mode="contained"
-            onPress={handleSubmit(onSubmit)}
+            onPress={handleSubmit(atualizaPerfil)}
             loading={requisitando}
             disabled={requisitando}>
-            {!requisitando ? 'Atualizar' : 'Atualizando'}
+            {!atualizando ? 'Atualizar' : 'Atualizando'}
           </Button>
           <Button
             style={styles.buttonOthers}
@@ -287,7 +294,7 @@ export default function PerfilTela({navigation}: any) {
             onPress={handleSubmit(avisarDaExclusaoPermanenteDaConta)}
             loading={requisitando}
             disabled={requisitando}>
-            {!requisitando ? 'Excluir' : 'Excluindo'}
+            {!excluindo ? 'Excluir' : 'Excluindo'}
           </Button>
         </>
       </ScrollView>
