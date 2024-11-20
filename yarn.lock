@@ -2889,6 +2889,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-firebase/storage@npm:21.3.0":
+  version: 21.3.0
+  resolution: "@react-native-firebase/storage@npm:21.3.0"
+  peerDependencies:
+    "@react-native-firebase/app": 21.3.0
+  checksum: 158ca8183d39721801b1b055dfb4ce4a9b2a84818e3bd4b22c7f82cf7e77650b24dbf89fece90758416861ef8c84bee77dbd03a94da0bd07bcf91ed580c8acb5
+  languageName: node
+  linkType: hard
+
 "@react-native/assets-registry@npm:0.75.4":
   version: 0.75.4
   resolution: "@react-native/assets-registry@npm:0.75.4"
@@ -8553,6 +8562,7 @@ __metadata:
     "@react-native-firebase/app": ^21.3.0
     "@react-native-firebase/auth": ^21.3.0
     "@react-native-firebase/firestore": 21.3.0
+    "@react-native-firebase/storage": 21.3.0
     "@react-native/babel-preset": 0.75.4
     "@react-native/eslint-config": 0.75.4
     "@react-native/metro-config": 0.75.4
