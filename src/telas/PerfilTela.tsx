@@ -3,6 +3,10 @@ import {CommonActions} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {Alert, Image, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  ImageLibraryOptions,
+  launchImageLibrary,
+} from 'react-native-image-picker';
 import {Button, Dialog, Text, TextInput, useTheme} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import * as yup from 'yup';
@@ -51,7 +55,7 @@ export default function PerfilTela({navigation}: any) {
   const [dialogExcluirVisivel, setDialogExcluirVisivel] = useState(false);
   const [mensagem, setMensagem] = useState({tipo: '', mensagem: ''});
   const {update, del} = useContext<any>(UserContext);
-  const [urlDevice, setUrlDevice] = useState('');
+  const [urlDevice, setUrlDevice] = useState<string | undefined>('');
 
   useEffect(() => {
     register('nome');
@@ -102,6 +106,24 @@ export default function PerfilTela({navigation}: any) {
     }
   }
 
+  const buscaNaGaleria = () => {
+    const options: ImageLibraryOptions = {
+      mediaType: 'photo',
+    };
+    launchImageLibrary(options, response => {
+      if (response.errorCode) {
+        setMensagem({tipo: 'erro', mensagem: 'Ops! Erro ao buscar a imagem.'});
+      } else if (response.didCancel) {
+        setMensagem({tipo: 'ok', mensagem: 'Ok, você cancelou.'});
+      } else {
+        const path = response.assets?.[0].uri;
+        console.log('buscaNaGaleria');
+        console.log(path);
+        setUrlDevice(path); //armazena a uri para a imagem no device
+      }
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -122,9 +144,7 @@ export default function PerfilTela({navigation}: any) {
               style={styles.buttonImage}
               mode="outlined"
               icon="image"
-              onPress={() =>
-                Alert.alert('Vamos ver isso em upload de imagens')
-              }>
+              onPress={() => buscaNaGaleria()}>
               Galeria
             </Button>
             <Button
