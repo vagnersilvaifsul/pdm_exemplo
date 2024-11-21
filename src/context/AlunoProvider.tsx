@@ -39,6 +39,11 @@ export const AlunoProvider = ({children}: any) => {
 
   const salvar = async (aluno: Aluno, urlDevice: string): Promise<string> => {
     try {
+      if (aluno.uid === '') {
+        aluno.uid = firestore().collection('alunos').doc().id;
+        console.log('Novo aluno');
+        console.log(aluno);
+      }
       if (urlDevice !== '') {
         aluno.urlFoto = await sendImageToStorage(aluno, urlDevice);
         if (!aluno.urlFoto) {
@@ -60,10 +65,11 @@ export const AlunoProvider = ({children}: any) => {
     }
   };
 
-  const excluir = async (uid: string, path: string) => {
+  const excluir = async (aluno: Aluno) => {
     try {
-      await firestore().collection('alunos').doc(uid).delete();
-      //await storage().ref(path).delete();
+      await firestore().collection('alunos').doc(aluno.uid).delete();
+      const pathToStorage = `imagens/alunos/${aluno?.uid}/foto.png`;
+      await storage().ref(pathToStorage).delete();
       return 'ok';
     } catch (e) {
       console.error('AlunoProvider, excluir: ', e);
@@ -76,6 +82,8 @@ export const AlunoProvider = ({children}: any) => {
     aluno: Aluno,
     urlDevice: string,
   ): Promise<string> {
+    console.log('sendImageToStorage');
+    console.log(aluno);
     //1. Redimensiona e compacta a imagem
     let imageRedimencionada = await ImageResizer.createResizedImage(
       urlDevice,
@@ -85,7 +93,7 @@ export const AlunoProvider = ({children}: any) => {
       80,
     );
     //2. e prepara o path onde ela deve ser salva no storage
-    const pathToStorage = `imagens/usuarios/${aluno.uid}/foto.png`;
+    const pathToStorage = `imagens/alunos/${aluno?.uid}/foto.png`;
 
     //3. Envia para o storage
     let url: string | null = ''; //local onde a imagem será salva no Storage

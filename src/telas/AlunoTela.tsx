@@ -2,6 +2,11 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import React, {useContext, useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {Image, StyleSheet, View} from 'react-native';
+import {
+  ImageLibraryOptions,
+  launchCamera,
+  launchImageLibrary,
+} from 'react-native-image-picker';
 import {Button, Dialog, Text, TextInput, useTheme} from 'react-native-paper';
 import * as yup from 'yup';
 import {AlunoContext} from '../context/AlunoProvider';
@@ -83,7 +88,7 @@ export default function AlunoTela({route, navigation}: any) {
     setDialogExcluirVisivel(false);
     setRequisitando(true);
     setExcluindo(true);
-    const msg = await excluir(aluno?.uid, 'caminho para imagem no storage');
+    const msg = await excluir(aluno);
     if (msg === 'ok') {
       setDialogErroVisivel(true);
       setRequisitando(false);
@@ -100,12 +105,40 @@ export default function AlunoTela({route, navigation}: any) {
     }
   }
 
-  async function buscaNaGaleria() {
-    console.log('Busca na galeria');
-  }
+  const buscaNaGaleria = () => {
+    const options: ImageLibraryOptions = {
+      mediaType: 'photo',
+    };
+    launchImageLibrary(options, response => {
+      if (response.errorCode) {
+        setMensagem({tipo: 'erro', mensagem: 'Ops! Erro ao buscar a imagem.'});
+      } else if (response.didCancel) {
+        setMensagem({tipo: 'ok', mensagem: 'Ok, você cancelou.'});
+      } else {
+        const path = response.assets?.[0].uri;
+        console.log('buscaNaGaleria');
+        console.log(path);
+        setUrlDevice(path); //armazena a uri para a imagem no device
+      }
+    });
+  };
 
-  async function tiraFoto() {
-    console.log('Tira foto');
+  function tiraFoto() {
+    const options: ImageLibraryOptions = {
+      mediaType: 'photo',
+    };
+    launchCamera(options, response => {
+      if (response.errorCode) {
+        setMensagem({tipo: 'erro', mensagem: 'Ops! Erro ao tirar a foto'});
+      } else if (response.didCancel) {
+        setMensagem({tipo: 'ok', mensagem: 'Ok, você cancelou.'});
+      } else {
+        const path = response.assets?.[0].uri;
+        console.log('tiraFoto');
+        console.log(path);
+        setUrlDevice(path); //armazena a uri para a imagem no device
+      }
+    });
   }
 
   return (
@@ -275,8 +308,7 @@ const styles = StyleSheet.create({
     width: 350,
   },
   button: {
-    marginTop: 50,
-    marginBottom: 30,
+    marginTop: 40,
     width: 350,
   },
   divButtonsImage: {
