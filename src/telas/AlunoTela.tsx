@@ -1,5 +1,5 @@
 import {yupResolver} from '@hookform/resolvers/yup';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {Image, StyleSheet, View} from 'react-native';
 import {Button, Dialog, Text, TextInput, useTheme} from 'react-native-paper';
@@ -20,7 +20,7 @@ const schema = yup.object().shape({
 });
 
 export default function AlunoTela({route, navigation}: any) {
-  const [aluno, setAluno] = useState<Aluno>(route.params.aluno);
+  const [aluno, setAluno] = useState<Aluno | null>(route.params.aluno);
   const theme = useTheme();
   const {
     control,
@@ -28,8 +28,8 @@ export default function AlunoTela({route, navigation}: any) {
     formState: {errors},
   } = useForm<any>({
     defaultValues: {
-      nome: aluno.nome,
-      curso: aluno.curso,
+      nome: aluno?.nome,
+      curso: aluno?.curso,
     },
     mode: 'onSubmit',
     resolver: yupResolver(schema),
@@ -41,10 +41,19 @@ export default function AlunoTela({route, navigation}: any) {
   const [dialogErroVisivel, setDialogErroVisivel] = useState(false);
   const [dialogExcluirVisivel, setDialogExcluirVisivel] = useState(false);
   const {salvar} = useContext<any>(AlunoContext);
+  const [enable, setEnable] = useState(false);
+
+  useEffect(() => {
+    if (!aluno) {
+      setEnable(true);
+    }
+  }, [aluno]);
 
   async function atualizar(data: Aluno) {
-    data.uid = aluno.uid;
-    data.urlFoto = aluno.urlFoto;
+    data.uid = aluno?.uid || '';
+    data.urlFoto =
+      aluno?.urlFoto ||
+      'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50';
     console.log('Atualizar', data);
     setRequisitando(true);
     setAtualizando(true);
@@ -84,8 +93,8 @@ export default function AlunoTela({route, navigation}: any) {
         source={
           urlDevice !== ''
             ? {uri: urlDevice}
-            : aluno.urlFoto !== ''
-            ? {uri: aluno.urlFoto}
+            : aluno && aluno?.urlFoto !== ''
+            ? {uri: aluno?.urlFoto}
             : require('../assets/images/person.png')
         }
         loadingIndicatorSource={require('../assets/images/person.png')}
@@ -124,7 +133,7 @@ export default function AlunoTela({route, navigation}: any) {
         )}
         name="nome"
       />
-      {errors.email && (
+      {errors.nome && (
         <Text style={{...styles.textError, color: theme.colors.error}}>
           {errors.nome?.message?.toString()}
         </Text>
@@ -143,7 +152,7 @@ export default function AlunoTela({route, navigation}: any) {
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
-            editable={false}
+            editable={enable}
             right={<TextInput.Icon icon="domain" />}
           />
         )}
@@ -160,7 +169,7 @@ export default function AlunoTela({route, navigation}: any) {
         onPress={handleSubmit(atualizar)}
         loading={requisitando}
         disabled={requisitando}>
-        {!atualizando ? 'Atualizar' : 'Atualizando'}
+        {!atualizando ? 'Salvar' : 'Salvando'}
       </Button>
       <Dialog
         visible={dialogExcluirVisivel}
@@ -250,5 +259,10 @@ const styles = StyleSheet.create({
   },
   textDialog: {
     textAlign: 'center',
+  },
+  fabStyle: {
+    bottom: 16,
+    right: 16,
+    position: 'absolute',
   },
 });
