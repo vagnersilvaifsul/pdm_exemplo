@@ -26,8 +26,6 @@ export const AlunoProvider = ({children}: any) => {
               urlFoto: doc.data().urlFoto,
             });
           });
-          console.log('Lista de alunos vindas do Firebase');
-          console.log(data);
           setAlunos(data);
         }
       });
@@ -41,8 +39,6 @@ export const AlunoProvider = ({children}: any) => {
     try {
       if (aluno.uid === '') {
         aluno.uid = firestore().collection('alunos').doc().id;
-        console.log('Novo aluno');
-        console.log(aluno);
       }
       if (urlDevice !== '') {
         aluno.urlFoto = await sendImageToStorage(aluno, urlDevice);
@@ -82,8 +78,6 @@ export const AlunoProvider = ({children}: any) => {
     aluno: Aluno,
     urlDevice: string,
   ): Promise<string> {
-    console.log('sendImageToStorage');
-    console.log(aluno);
     //1. Redimensiona e compacta a imagem
     let imageRedimencionada = await ImageResizer.createResizedImage(
       urlDevice,
