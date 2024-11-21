@@ -3,6 +3,7 @@ import React, {useContext} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {Avatar, Card, List, useTheme} from 'react-native-paper';
 import {AlunoContext} from '../context/AlunoProvider';
+import {Aluno} from '../model/Aluno';
 
 export default function Alunos({navigation}: any) {
   const theme = useTheme();
@@ -23,7 +24,7 @@ export default function Alunos({navigation}: any) {
           Lista de Alunos
         </List.Subheader>
         <ScrollView>
-          {alunos.map((aluno, key) => (
+          {alunos.map((aluno: Aluno, key: number) => (
             <Card
               key={key}
               style={{...styles.card, borderColor: theme.colors.secondary}}

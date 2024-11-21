@@ -1,11 +1,11 @@
 import {yupResolver} from '@hookform/resolvers/yup';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {Image, StyleSheet, View} from 'react-native';
-import {Button, Text, TextInput, useTheme} from 'react-native-paper';
+import {Button, Dialog, Text, TextInput, useTheme} from 'react-native-paper';
 import * as yup from 'yup';
+import {AlunoContext} from '../context/AlunoProvider';
 import {Aluno} from '../model/Aluno';
-import {Usuario} from '../model/Usuario';
 
 const requiredMessage = 'Campo obrigatório';
 const schema = yup.object().shape({
@@ -19,7 +19,7 @@ const schema = yup.object().shape({
     .min(4, 'O nome deve ter ao menos 2 caracteres'),
 });
 
-export default function AlunoTela({route}: any) {
+export default function AlunoTela({route, navigation}: any) {
   const [aluno, setAluno] = useState<Aluno>(route.params.aluno);
   const theme = useTheme();
   const {
@@ -36,9 +36,37 @@ export default function AlunoTela({route}: any) {
   });
   const [requisitando, setRequisitando] = useState(false);
   const [urlDevice, setUrlDevice] = useState<string | undefined>('');
+  const [atualizando, setAtualizando] = useState(false);
+  const [mensagem, setMensagem] = useState({tipo: '', mensagem: ''});
+  const [dialogErroVisivel, setDialogErroVisivel] = useState(false);
+  const [dialogExcluirVisivel, setDialogExcluirVisivel] = useState(false);
+  const {salvar} = useContext<any>(AlunoContext);
 
-  async function atualizar(data: Usuario) {
+  async function atualizar(data: Aluno) {
+    data.uid = aluno.uid;
+    data.urlFoto = aluno.urlFoto;
     console.log('Atualizar', data);
+    setRequisitando(true);
+    setAtualizando(true);
+    const msg = await salvar(data, urlDevice);
+    if (msg === 'ok') {
+      setMensagem({
+        tipo: 'ok',
+        mensagem: 'Show! Seu perfil foi atualizado com sucesso.',
+      });
+      setDialogErroVisivel(true);
+      setRequisitando(false);
+      setAtualizando(false);
+    } else {
+      setMensagem({tipo: 'erro', mensagem: msg});
+      setDialogErroVisivel(true);
+      setRequisitando(false);
+      setAtualizando(false);
+    }
+  }
+
+  async function excluirAluno() {
+    console.log('Excluir aluno');
   }
 
   async function buscaNaGaleria() {
@@ -132,8 +160,54 @@ export default function AlunoTela({route}: any) {
         onPress={handleSubmit(atualizar)}
         loading={requisitando}
         disabled={requisitando}>
-        {!requisitando ? 'Atualizar' : 'Atualizando'}
+        {!atualizando ? 'Atualizar' : 'Atualizando'}
       </Button>
+      <Dialog
+        visible={dialogExcluirVisivel}
+        onDismiss={() => {
+          setDialogErroVisivel(false);
+        }}>
+        <Dialog.Icon icon={'alert-circle-outline'} size={60} />
+        <Dialog.Title style={styles.textDialog}>{'Ops!'}</Dialog.Title>
+        <Dialog.Content>
+          <Text style={styles.textDialog} variant="bodyLarge">
+            {
+              'Você tem certeza que deseja excluir sua conta?\nEsta operação será irreversível.'
+            }
+          </Text>
+        </Dialog.Content>
+        <Dialog.Actions>
+          <Button onPress={() => setDialogExcluirVisivel(false)}>
+            Cancelar
+          </Button>
+          <Button onPress={excluirAluno}>Excluir</Button>
+        </Dialog.Actions>
+      </Dialog>
+      <Dialog
+        visible={dialogErroVisivel}
+        onDismiss={() => {
+          setDialogErroVisivel(false);
+          if (mensagem.tipo === 'ok') {
+            navigation.goBack();
+          }
+        }}>
+        <Dialog.Icon
+          icon={
+            mensagem.tipo === 'ok'
+              ? 'checkbox-marked-circle-outline'
+              : 'alert-circle-outline'
+          }
+          size={60}
+        />
+        <Dialog.Title style={styles.textDialog}>
+          {mensagem.tipo === 'ok' ? 'Informação' : 'Erro'}
+        </Dialog.Title>
+        <Dialog.Content>
+          <Text style={styles.textDialog} variant="bodyLarge">
+            {mensagem.mensagem}
+          </Text>
+        </Dialog.Content>
+      </Dialog>
     </View>
   );
 }
@@ -173,5 +247,8 @@ const styles = StyleSheet.create({
   },
   buttonImage: {
     width: 180,
+  },
+  textDialog: {
+    textAlign: 'center',
   },
 });
