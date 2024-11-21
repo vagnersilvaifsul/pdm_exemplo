@@ -116,7 +116,7 @@ export default function AlunoTela({route}: any) {
             onChangeText={onChange}
             value={value}
             editable={false}
-            right={<TextInput.Icon icon="email" />}
+            right={<TextInput.Icon icon="domain" />}
           />
         )}
         name="curso"

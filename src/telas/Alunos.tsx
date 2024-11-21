@@ -1,121 +1,12 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React from 'react';
+import React, {useContext} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {Avatar, Card, List, useTheme} from 'react-native-paper';
+import {AlunoContext} from '../context/AlunoProvider';
 
 export default function Alunos({navigation}: any) {
   const theme = useTheme();
-  //fake de dados para implementar a view
-  const alunos = [
-    {
-      uid: '1',
-      nome: 'João Dias Furtado',
-      curso: 'CSTSI',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '2',
-      nome: 'Maria Helena Torres Santos',
-      curso: 'CSBD',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '3',
-      nome: 'João',
-      curso: 'CSTSI',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '4',
-      nome: 'Maria',
-      curso: 'CSBD',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '5',
-      nome: 'João',
-      curso: 'CSTSI',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '6',
-      nome: 'Maria',
-      curso: 'CSBD',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '7',
-      nome: 'João Dias Furtado',
-      curso: 'CSTSI',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '8',
-      nome: 'Maria Helena Torres Santos',
-      curso: 'CSBD',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '9',
-      nome: 'João',
-      curso: 'CSTSI',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '10',
-      nome: 'Maria',
-      curso: 'CSBD',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '11',
-      nome: 'João',
-      curso: 'CSTSI',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '12',
-      nome: 'Maria',
-      curso: 'CSBD',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '13',
-      nome: 'João Dias Furtado',
-      curso: 'CSTSI',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '14',
-      nome: 'Maria Helena Torres Santos',
-      curso: 'CSBD',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '15',
-      nome: 'João',
-      curso: 'CSTSI',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '16',
-      nome: 'Maria',
-      curso: 'CSBD',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '17',
-      nome: 'João',
-      curso: 'CSTSI',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-    {
-      uid: '18',
-      nome: 'Maria',
-      curso: 'CSBD',
-      urlFoto: 'https://www.gravatar.com/avatar/0?d=mp',
-    },
-  ];
+  const {alunos} = useContext<any>(AlunoContext);
 
   const irParaTelaAluno = (aluno: any) => {
     navigation.navigate('AlunoTela', {
