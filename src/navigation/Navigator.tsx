@@ -6,7 +6,7 @@ import React from 'react';
 import {StatusBar} from 'react-native';
 import {Icon, useTheme} from 'react-native-paper';
 import AlteraSenha from '../telas/AlteraSenha';
-import Aluno from '../telas/Aluno';
+import AlunoTela from '../telas/AlunoTela';
 import Alunos from '../telas/Alunos';
 import EsqueceuSenha from '../telas/EsqueceuSenha';
 import Menu from '../telas/Menu';
@@ -80,8 +80,8 @@ export default function Navigator() {
         <Stack.Screen component={AuthStack} name="AuthStack" />
         <Stack.Screen component={AppStack} name="AppStack" />
         <Stack.Screen
-          component={Aluno}
-          name="Aluno"
+          component={AlunoTela}
+          name="AlunoTela"
           options={{
             presentation: 'modal',
           }}

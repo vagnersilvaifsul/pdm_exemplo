@@ -118,7 +118,7 @@ export default function Alunos({navigation}: any) {
   ];
 
   const irParaTelaAluno = (aluno: any) => {
-    navigation.navigate('Aluno', {
+    navigation.navigate('AlunoTela', {
       aluno,
     });
   };
@@ -132,8 +132,9 @@ export default function Alunos({navigation}: any) {
           Lista de Alunos
         </List.Subheader>
         <ScrollView>
-          {alunos.map(aluno => (
+          {alunos.map((aluno, key) => (
             <Card
+              key={key}
               style={{...styles.card, borderColor: theme.colors.secondary}}
               onPress={() => irParaTelaAluno(aluno)}>
               <Card.Title
