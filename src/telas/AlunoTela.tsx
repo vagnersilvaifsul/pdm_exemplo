@@ -40,8 +40,9 @@ export default function AlunoTela({route, navigation}: any) {
   const [mensagem, setMensagem] = useState({tipo: '', mensagem: ''});
   const [dialogErroVisivel, setDialogErroVisivel] = useState(false);
   const [dialogExcluirVisivel, setDialogExcluirVisivel] = useState(false);
-  const {salvar} = useContext<any>(AlunoContext);
+  const {salvar, excluir} = useContext<any>(AlunoContext);
   const [enable, setEnable] = useState(false);
+  const [excluindo, setExcluindo] = useState(false);
 
   useEffect(() => {
     if (!aluno) {
@@ -61,7 +62,7 @@ export default function AlunoTela({route, navigation}: any) {
     if (msg === 'ok') {
       setMensagem({
         tipo: 'ok',
-        mensagem: 'Show! Seu perfil foi atualizado com sucesso.',
+        mensagem: 'Show! Operação realizada com sucesso.',
       });
       setDialogErroVisivel(true);
       setRequisitando(false);
@@ -74,8 +75,29 @@ export default function AlunoTela({route, navigation}: any) {
     }
   }
 
+  function avisarDaExclusaoPermanenteDaConta() {
+    setDialogExcluirVisivel(true);
+  }
+
   async function excluirAluno() {
-    console.log('Excluir aluno');
+    setDialogExcluirVisivel(false);
+    setRequisitando(true);
+    setExcluindo(true);
+    const msg = await excluir(aluno?.uid, 'caminho para imagem no storage');
+    if (msg === 'ok') {
+      setDialogErroVisivel(true);
+      setRequisitando(false);
+      setAtualizando(false);
+      setMensagem({
+        tipo: 'ok',
+        mensagem: 'O Aluno foi excluído com sucesso.',
+      });
+    } else {
+      setMensagem({tipo: 'erro', mensagem: 'ops! algo deu errado'});
+      setDialogErroVisivel(true);
+      setRequisitando(false);
+      setExcluindo(false);
+    }
   }
 
   async function buscaNaGaleria() {
@@ -171,17 +193,26 @@ export default function AlunoTela({route, navigation}: any) {
         disabled={requisitando}>
         {!atualizando ? 'Salvar' : 'Salvando'}
       </Button>
+      <Button
+        style={styles.buttonOthers}
+        mode="outlined"
+        onPress={handleSubmit(avisarDaExclusaoPermanenteDaConta)}
+        loading={requisitando}
+        disabled={requisitando}>
+        {!excluindo ? 'Excluir' : 'Excluindo'}
+      </Button>
       <Dialog
         visible={dialogExcluirVisivel}
         onDismiss={() => {
           setDialogErroVisivel(false);
+          navigation.goBack();
         }}>
         <Dialog.Icon icon={'alert-circle-outline'} size={60} />
         <Dialog.Title style={styles.textDialog}>{'Ops!'}</Dialog.Title>
         <Dialog.Content>
           <Text style={styles.textDialog} variant="bodyLarge">
             {
-              'Você tem certeza que deseja excluir sua conta?\nEsta operação será irreversível.'
+              'Você tem certeza que deseja excluir esse registro?\nEsta operação será irreversível.'
             }
           </Text>
         </Dialog.Content>
@@ -264,5 +295,10 @@ const styles = StyleSheet.create({
     bottom: 16,
     right: 16,
     position: 'absolute',
+  },
+  buttonOthers: {
+    marginTop: 20,
+    marginBottom: 30,
+    width: 350,
   },
 });

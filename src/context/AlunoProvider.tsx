@@ -56,7 +56,18 @@ export const AlunoProvider = ({children}: any) => {
       return 'ok';
     } catch (e) {
       console.error('AlunoProvider, salvar: ' + e);
-      return 'Não foi possíve salvar a imagem. Contate o suporte técnico.';
+      return 'Não foi possíve salvar a imagem. Por favor, contate o suporte técnico.';
+    }
+  };
+
+  const excluir = async (uid: string, path: string) => {
+    try {
+      await firestore().collection('alunos').doc(uid).delete();
+      //await storage().ref(path).delete();
+      return 'ok';
+    } catch (e) {
+      console.error('AlunoProvider, excluir: ', e);
+      return 'Não foi possíve excluir o aluno. Por favor, contate o suporte técnico.';
     }
   };
 
@@ -101,7 +112,7 @@ export const AlunoProvider = ({children}: any) => {
   }
 
   return (
-    <AlunoContext.Provider value={{alunos, salvar}}>
+    <AlunoContext.Provider value={{alunos, salvar, excluir}}>
       {children}
     </AlunoContext.Provider>
   );
