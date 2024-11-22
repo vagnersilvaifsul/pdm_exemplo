@@ -107,7 +107,7 @@ const themeDark = {
   },
 };
 
-const temaDoApp = false; //TODO: passar para Context para mudar o tema do app
+const temaDoApp = true; //TODO: passar para Context para mudar o tema do app
 
 export default function Providers() {
   return (
