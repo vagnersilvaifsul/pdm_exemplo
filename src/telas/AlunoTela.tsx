@@ -115,8 +115,6 @@ export default function AlunoTela({route, navigation}: any) {
         setMensagem({tipo: 'ok', mensagem: 'Ok, você cancelou.'});
       } else {
         const path = response.assets?.[0].uri;
-        console.log('buscaNaGaleria');
-        console.log(path);
         setUrlDevice(path); //armazena a uri para a imagem no device
       }
     });
@@ -133,8 +131,6 @@ export default function AlunoTela({route, navigation}: any) {
         setMensagem({tipo: 'ok', mensagem: 'Ok, você cancelou.'});
       } else {
         const path = response.assets?.[0].uri;
-        console.log('tiraFoto');
-        console.log(path);
         setUrlDevice(path); //armazena a uri para a imagem no device
       }
     });
