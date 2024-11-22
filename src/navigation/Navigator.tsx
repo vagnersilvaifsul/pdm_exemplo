@@ -36,9 +36,12 @@ const AppStack = () => {
   return (
     <Tab.Navigator
       initialRouteName="Alunos"
-      screenOptions={{
+      screenOptions={() => ({
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: 'gray',
         headerShown: false,
-      }}>
+        tabBarStyle: {backgroundColor: theme.colors.surface},
+      })}>
       <Tab.Screen
         component={Alunos}
         name="Alunos"
@@ -71,7 +74,11 @@ export default function Navigator() {
   const theme = useTheme();
   return (
     <NavigationContainer>
-      <StatusBar backgroundColor={theme.colors.primary} />
+      <StatusBar
+        backgroundColor={
+          theme.dark ? theme.colors.surface : theme.colors.primary
+        }
+      />
       <Stack.Navigator
         initialRouteName="AuthStack"
         screenOptions={{

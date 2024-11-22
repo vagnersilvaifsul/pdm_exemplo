@@ -51,7 +51,8 @@ export default function EsqueceuSenha({navigation}: any) {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{...styles.container, backgroundColor: theme.colors.background}}>
       <Text variant="headlineMedium">Recuperar Senha</Text>
       <Controller
         control={control}

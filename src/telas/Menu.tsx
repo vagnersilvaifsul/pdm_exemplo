@@ -24,7 +24,8 @@ export default function Menu({navigation}: any) {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{...styles.container, backgroundColor: theme.colors.background}}>
       <List.Item
         title="Perfil"
         description="Atualize seu perfil ou exclua sua conta"

@@ -137,7 +137,8 @@ export default function AlunoTela({route, navigation}: any) {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{...styles.container, backgroundColor: theme.colors.background}}>
       <Image
         style={styles.image}
         source={
