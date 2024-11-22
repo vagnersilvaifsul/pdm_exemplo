@@ -319,11 +319,6 @@ const styles = StyleSheet.create({
   textDialog: {
     textAlign: 'center',
   },
-  fabStyle: {
-    bottom: 16,
-    right: 16,
-    position: 'absolute',
-  },
   buttonOthers: {
     marginTop: 20,
     marginBottom: 30,
