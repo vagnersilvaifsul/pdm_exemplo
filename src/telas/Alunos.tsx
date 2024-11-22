@@ -42,6 +42,7 @@ export default function Alunos({navigation}: any) {
       </List.Section>
       <FAB
         icon="plus"
+        color={theme.colors.white}
         style={styles.fab}
         onPress={() => irParaTelaAluno(null)}
       />
