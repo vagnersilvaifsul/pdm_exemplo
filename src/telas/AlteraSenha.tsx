@@ -60,8 +60,6 @@ export default function AlteraSenha({navigation}: any) {
   }) {
     setRequisitando(true);
     //O serviço Auth do Firebase exige um login recente para alterar a senha
-    console.log('onSubmit');
-    console.log(data);
     const msg = await signIn({email: userAuth.email, senha: data.senha_atual});
     if (msg !== 'ok') {
       setRequisitando(false);

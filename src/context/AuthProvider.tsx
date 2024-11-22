@@ -114,7 +114,6 @@ export const AuthProvider = ({children}: any) => {
 
   //função utilitária
   function launchServerMessageErro(e: any): string {
-    console.log(e);
     switch (e.code) {
       case 'auth/invalid-credential':
         return 'Email inexistente ou senha errada.';

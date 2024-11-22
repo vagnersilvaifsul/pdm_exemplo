@@ -60,7 +60,6 @@ export default function AlunoTela({route, navigation}: any) {
     data.urlFoto =
       aluno?.urlFoto ||
       'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50';
-    console.log('Atualizar', data);
     setRequisitando(true);
     setAtualizando(true);
     const msg = await salvar(data, urlDevice);

@@ -76,7 +76,6 @@ function SignIn({navigation}: any) {
   }, [register]);
 
   async function onSubmit(data: Credencial) {
-    console.log(JSON.stringify(data));
     setLogando(true);
     const mensagem = await signIn(data);
     if (mensagem === 'ok') {
@@ -91,7 +90,6 @@ function SignIn({navigation}: any) {
       setDialogVisivel(true);
     }
   }
-  //console.log(errors);
 
   return (
     <SafeAreaView style={styles.container}>

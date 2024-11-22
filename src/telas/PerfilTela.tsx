@@ -68,7 +68,6 @@ export default function PerfilTela({navigation}: any) {
   }, [register]);
 
   async function atualizaPerfil(data: Usuario) {
-    console.log('Atualizar perfil');
     setRequisitando(true);
     setAtualizando(true);
     data.urlFoto =
@@ -125,8 +124,6 @@ export default function PerfilTela({navigation}: any) {
         setMensagem({tipo: 'ok', mensagem: 'Ok, você cancelou.'});
       } else {
         const path = response.assets?.[0].uri;
-        console.log('buscaNaGaleria');
-        console.log(path);
         setUrlDevice(path); //armazena a uri para a imagem no device
       }
     });
@@ -143,8 +140,6 @@ export default function PerfilTela({navigation}: any) {
         setMensagem({tipo: 'ok', mensagem: 'Ok, você cancelou.'});
       } else {
         const path = response.assets?.[0].uri;
-        console.log('tiraFoto');
-        console.log(path);
         setUrlDevice(path); //armazena a uri para a imagem no device
       }
     });

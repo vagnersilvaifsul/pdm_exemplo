@@ -20,8 +20,6 @@ export default function Preload({navigation}: any) {
   useEffect(() => {
     // cria um listener para o estado da sessão
     const unsubscriber = auth().onAuthStateChanged(async authUser => {
-      console.log('Preload');
-      console.log(authUser);
       //se há um usuário autenticado
       if (authUser) {
         //1o. Verifica se o email foi verificado
@@ -62,7 +60,6 @@ export default function Preload({navigation}: any) {
   async function buscaUsuario() {
     const usuario = await getUser();
     if (usuario) {
-      console.log(usuario);
       setUserAuth(usuario);
       navigation.dispatch(
         CommonActions.reset({

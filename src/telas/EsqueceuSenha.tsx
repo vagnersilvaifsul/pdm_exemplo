@@ -34,8 +34,6 @@ export default function EsqueceuSenha({navigation}: any) {
   const [mensagem, setMensagem] = useState({tipo: '', mensagem: ''});
 
   async function onSubmit(data: any) {
-    setRequisitando(true);
-    console.log(data);
     const msg = await recuperarSenha(data.email);
     if (msg === 'ok') {
       setRequisitando(false);
