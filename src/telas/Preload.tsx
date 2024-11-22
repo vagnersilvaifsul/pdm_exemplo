@@ -3,11 +3,12 @@ import auth from '@react-native-firebase/auth';
 import {CommonActions} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
-import {Dialog, Text} from 'react-native-paper';
+import {Dialog, Text, useTheme} from 'react-native-paper';
 import {AuthContext} from '../context/AuthProvider';
 import {UserContext} from '../context/UserProvider';
 
 export default function Preload({navigation}: any) {
+  const theme = useTheme();
   const {setUserAuth, recuperaCredencialdaCache, signIn} =
     useContext<any>(AuthContext);
   const {getUser} = useContext<any>(UserContext);
@@ -81,7 +82,8 @@ export default function Preload({navigation}: any) {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{...styles.container, backgroundColor: theme.colors.background}}>
       <Image
         style={styles.imagem}
         source={require('../assets/images/logo512.png')}

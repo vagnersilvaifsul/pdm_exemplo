@@ -93,7 +93,8 @@ export default function AlteraSenha({navigation}: any) {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{...styles.container, backgroundColor: theme.colors.background}}>
       <Text variant="headlineMedium">Alterar Senha</Text>
       <Controller
         control={control}
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    marginTop: 20,
+    paddingTop: 20,
   },
   textinput: {
     width: 350,

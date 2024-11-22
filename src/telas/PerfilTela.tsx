@@ -146,7 +146,8 @@ export default function PerfilTela({navigation}: any) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={{...styles.container, backgroundColor: theme.colors.background}}>
       <ScrollView>
         <>
           <Image
