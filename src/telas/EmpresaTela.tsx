@@ -1,7 +1,7 @@
 import {yupResolver} from '@hookform/resolvers/yup';
 import React, {useContext, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, ScrollView, StyleSheet, View} from 'react-native';
 import {
   ImageLibraryOptions,
   launchCamera,
@@ -35,6 +35,7 @@ export default function EmpresaTela({route, navigation}: any) {
     defaultValues: {
       nome: empresa?.nome,
       tecnologias: empresa?.tecnologias,
+      endereco: empresa?.endereco,
     },
     mode: 'onSubmit',
     resolver: yupResolver(schema),
@@ -53,7 +54,6 @@ export default function EmpresaTela({route, navigation}: any) {
     data.urlFoto =
       empresa?.urlFoto ||
       'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50';
-    data.endereco = empresa?.endereco || '';
     data.latitude = empresa?.latitude || 0;
     data.longitude = empresa?.longitude || 0;
     setRequisitando(true);
@@ -135,96 +135,123 @@ export default function EmpresaTela({route, navigation}: any) {
   return (
     <View
       style={{...styles.container, backgroundColor: theme.colors.background}}>
-      <Image
-        style={styles.image}
-        source={
-          urlDevice !== ''
-            ? {uri: urlDevice}
-            : empresa && empresa?.urlFoto !== ''
-            ? {uri: empresa?.urlFoto}
-            : require('../assets/images/person.png')
-        }
-        loadingIndicatorSource={require('../assets/images/person.png')}
-      />
-      <View style={styles.divButtonsImage}>
-        <Button
-          style={styles.buttonImage}
-          mode="outlined"
-          icon="image"
-          onPress={() => buscaNaGaleria()}>
-          Galeria
-        </Button>
-        <Button
-          style={styles.buttonImage}
-          mode="outlined"
-          icon="camera"
-          onPress={() => tiraFoto()}>
-          Foto
-        </Button>
-      </View>
-      <Controller
-        control={control}
-        render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
-            style={styles.textinput}
-            label="Nome"
-            placeholder="Digite o nome da empresa"
-            mode="outlined"
-            autoCapitalize="words"
-            returnKeyType="next"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            right={<TextInput.Icon icon="office-building" />}
+      <ScrollView>
+        <>
+          <Image
+            style={styles.image}
+            source={
+              urlDevice !== ''
+                ? {uri: urlDevice}
+                : empresa && empresa?.urlFoto !== ''
+                ? {uri: empresa?.urlFoto}
+                : require('../assets/images/logo512.png')
+            }
+            loadingIndicatorSource={require('../assets/images/person.png')}
           />
-        )}
-        name="nome"
-      />
-      {errors.nome && (
-        <Text style={{...styles.textError, color: theme.colors.error}}>
-          {errors.nome?.message?.toString()}
-        </Text>
-      )}
-      <Controller
-        control={control}
-        render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
-            style={styles.textinput}
-            label="Teconologias"
-            placeholder="react, react native, expo"
-            mode="outlined"
-            autoCapitalize="words"
-            returnKeyType="next"
-            keyboardType="default"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            right={<TextInput.Icon icon="rocket-launch" />}
+          <View style={styles.divButtonsImage}>
+            <Button
+              style={styles.buttonImage}
+              mode="outlined"
+              icon="image"
+              onPress={() => buscaNaGaleria()}>
+              Galeria
+            </Button>
+            <Button
+              style={styles.buttonImage}
+              mode="outlined"
+              icon="camera"
+              onPress={() => tiraFoto()}>
+              Foto
+            </Button>
+          </View>
+          <Controller
+            control={control}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.textinput}
+                label="Nome"
+                placeholder="Digite o nome da empresa"
+                mode="outlined"
+                autoCapitalize="words"
+                returnKeyType="next"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                right={<TextInput.Icon icon="office-building" />}
+              />
+            )}
+            name="nome"
           />
-        )}
-        name="tecnologias"
-      />
-      {errors.tecnologias && (
-        <Text style={{...styles.textError, color: theme.colors.error}}>
-          {errors.tecnologias?.message?.toString()}
-        </Text>
-      )}
-      <Button
-        style={styles.button}
-        mode="contained"
-        onPress={handleSubmit(atualizar)}
-        loading={requisitando}
-        disabled={requisitando}>
-        {!atualizando ? 'Salvar' : 'Salvando'}
-      </Button>
-      <Button
-        style={styles.buttonOthers}
-        mode="outlined"
-        onPress={handleSubmit(avisarDaExclusaoPermanenteDoRegistro)}
-        loading={requisitando}
-        disabled={requisitando}>
-        {!excluindo ? 'Excluir' : 'Excluindo'}
-      </Button>
+          {errors.nome && (
+            <Text style={{...styles.textError, color: theme.colors.error}}>
+              {errors.nome?.message?.toString()}
+            </Text>
+          )}
+          <Controller
+            control={control}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.textinput}
+                label="Teconologias"
+                placeholder="react, react native, expo"
+                mode="outlined"
+                autoCapitalize="words"
+                returnKeyType="next"
+                keyboardType="default"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                right={<TextInput.Icon icon="rocket-launch" />}
+              />
+            )}
+            name="tecnologias"
+          />
+          {errors.tecnologias && (
+            <Text style={{...styles.textError, color: theme.colors.error}}>
+              {errors.tecnologias?.message?.toString()}
+            </Text>
+          )}
+          <Controller
+            control={control}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.textinput}
+                label="Endereço"
+                placeholder="Digite o endereço"
+                mode="outlined"
+                autoCapitalize="words"
+                returnKeyType="next"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                right={<TextInput.Icon icon="map" />}
+              />
+            )}
+            name="endereco"
+          />
+          {errors.nome && (
+            <Text style={{...styles.textError, color: theme.colors.error}}>
+              {errors.nome?.message?.toString()}
+            </Text>
+          )}
+          <Button
+            style={styles.button}
+            mode="contained"
+            onPress={handleSubmit(atualizar)}
+            loading={requisitando}
+            disabled={requisitando}>
+            {!atualizando ? 'Salvar' : 'Salvando'}
+          </Button>
+          <Button
+            style={styles.buttonOthers}
+            mode="outlined"
+            onPress={handleSubmit(avisarDaExclusaoPermanenteDoRegistro)}
+            loading={requisitando}
+            disabled={requisitando}>
+            {!excluindo ? 'Excluir' : 'Excluindo'}
+          </Button>
+        </>
+      </ScrollView>
       <Dialog
         visible={dialogExcluirVisivel}
         onDismiss={() => {
