@@ -2,6 +2,7 @@ import React from 'react';
 import {MD3DarkTheme, MD3LightTheme, PaperProvider} from 'react-native-paper';
 import {AlunoProvider} from '../context/AlunoProvider';
 import {AuthProvider} from '../context/AuthProvider';
+import {EmpresaProvider} from '../context/EmpresaProvider';
 import {UserProvider} from '../context/UserProvider';
 import Navigator from './Navigator';
 
@@ -21,9 +22,11 @@ export default function Providers() {
     <AuthProvider>
       <UserProvider>
         <AlunoProvider>
-          <PaperProvider theme={temaDoApp ? themeLight : themeDark}>
-            <Navigator />
-          </PaperProvider>
+          <EmpresaProvider>
+            <PaperProvider theme={temaDoApp ? themeLight : themeDark}>
+              <Navigator />
+            </PaperProvider>
+          </EmpresaProvider>
         </AlunoProvider>
       </UserProvider>
     </AuthProvider>

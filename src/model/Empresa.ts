@@ -1,4 +1,5 @@
 export class Empresa {
+  public uid: string;
   public nome: string;
   public tecnologias: string;
   public endereco: string;
@@ -6,6 +7,7 @@ export class Empresa {
   public longitude: number;
   public urlFoto: string;
   constructor(
+    uid: string,
     nome: string,
     tecnologias: string,
     endereco: string,
@@ -13,6 +15,7 @@ export class Empresa {
     longitude: number,
     urlFoto: string,
   ) {
+    this.uid = uid;
     this.nome = nome;
     this.tecnologias = tecnologias;
     this.endereco = endereco;
