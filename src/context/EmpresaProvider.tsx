@@ -42,6 +42,7 @@ export const EmpresaProvider = ({children}: any) => {
     empresa: Empresa,
     urlDevice: string,
   ): Promise<string> => {
+    console.log('EmpresaProvider, salvar: ', empresa);
     try {
       if (empresa.uid === '') {
         empresa.uid = firestore().collection('empresas').doc().id;

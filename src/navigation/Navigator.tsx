@@ -8,6 +8,7 @@ import {Icon, useTheme} from 'react-native-paper';
 import AlteraSenha from '../telas/AlteraSenha';
 import AlunoTela from '../telas/AlunoTela';
 import Alunos from '../telas/Alunos';
+import EmpresaTela from '../telas/EmpresaTela';
 import Empresas from '../telas/Empresas';
 import EsqueceuSenha from '../telas/EsqueceuSenha';
 import Menu from '../telas/Menu';
@@ -104,6 +105,13 @@ export default function Navigator() {
         <Stack.Screen
           component={AlunoTela}
           name="AlunoTela"
+          options={{
+            presentation: 'modal',
+          }}
+        />
+        <Stack.Screen
+          component={EmpresaTela}
+          name="EmpresaTela"
           options={{
             presentation: 'modal',
           }}

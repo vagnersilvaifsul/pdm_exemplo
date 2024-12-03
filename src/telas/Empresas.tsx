@@ -9,7 +9,7 @@ export default function Empresas({navigation}: any) {
   const theme = useTheme();
   const {empresas} = useContext<any>(EmpresaContext);
 
-  const irParaTelaAluno = (empresa: Empresa | null) => {
+  const irParaTelaEmpresa = (empresa: Empresa | null) => {
     navigation.navigate('EmpresaTela', {
       empresa,
     });
@@ -28,7 +28,7 @@ export default function Empresas({navigation}: any) {
             <Card
               key={key}
               style={{...styles.card, borderColor: theme.colors.secondary}}
-              onPress={() => irParaTelaAluno(empresa)}>
+              onPress={() => irParaTelaEmpresa(empresa)}>
               <Card.Title
                 title={empresa.nome}
                 subtitle={empresa.tecnologias}
@@ -43,7 +43,7 @@ export default function Empresas({navigation}: any) {
       <FAB
         icon="plus"
         style={styles.fab}
-        onPress={() => irParaTelaAluno(null)}
+        onPress={() => irParaTelaEmpresa(null)}
       />
     </View>
   );
