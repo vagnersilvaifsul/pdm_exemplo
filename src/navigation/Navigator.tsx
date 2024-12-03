@@ -8,6 +8,7 @@ import {Icon, useTheme} from 'react-native-paper';
 import AlteraSenha from '../telas/AlteraSenha';
 import AlunoTela from '../telas/AlunoTela';
 import Alunos from '../telas/Alunos';
+import Empresas from '../telas/Empresas';
 import EsqueceuSenha from '../telas/EsqueceuSenha';
 import Menu from '../telas/Menu';
 import Perfil from '../telas/PerfilTela';
@@ -50,6 +51,20 @@ const AppStack = () => {
           tabBarIcon: () => (
             <Icon
               source="account-group"
+              color={theme.colors.primary}
+              size={20}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        component={Empresas}
+        name="Empresas"
+        options={{
+          tabBarLabel: 'Empresas',
+          tabBarIcon: () => (
+            <Icon
+              source="office-building-outline"
               color={theme.colors.primary}
               size={20}
             />
