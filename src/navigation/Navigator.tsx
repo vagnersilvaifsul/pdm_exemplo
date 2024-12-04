@@ -14,6 +14,7 @@ import EsqueceuSenha from '../telas/EsqueceuSenha';
 import Menu from '../telas/Menu';
 import Perfil from '../telas/PerfilTela';
 import Preload from '../telas/Preload';
+import Professores from '../telas/Professores';
 import SignIn from '../telas/SignIn';
 import SignUp from '../telas/SignUp';
 
@@ -52,6 +53,20 @@ const AppStack = () => {
           tabBarIcon: () => (
             <Icon
               source="account-group"
+              color={theme.colors.primary}
+              size={20}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        component={Professores}
+        name="Professores"
+        options={{
+          tabBarLabel: 'Professores',
+          tabBarIcon: () => (
+            <Icon
+              source="account-tie-hat"
               color={theme.colors.primary}
               size={20}
             />

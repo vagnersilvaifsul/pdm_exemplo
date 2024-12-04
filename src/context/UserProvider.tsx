@@ -3,7 +3,6 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import {Aluno} from '../model/Aluno';
 import {Perfil} from '../model/Perfil';
 import {Usuario} from '../model/Usuario';
 import {AuthContext} from './AuthProvider';
@@ -12,10 +11,12 @@ export const UserContext = createContext({});
 
 export const UserProvider = ({children}: any) => {
   const {setUserAuth} = useContext<any>(AuthContext);
-  const [alunos, setAlunos] = useState<Aluno[]>([]);
+  const [alunos, setAlunos] = useState<Usuario[]>([]);
+  const [professores, setProfessores] = useState<Usuario[]>([]);
 
   useEffect(() => {
-    const listener = firestore()
+    //listener para o perfil Aluno
+    const listenerAlunos = firestore()
       .collection('usuarios')
       .where('perfil', '==', Perfil.Aluno)
       .orderBy('nome')
@@ -23,13 +24,15 @@ export const UserProvider = ({children}: any) => {
         //console.log(snapShot);
         //console.log(snapShot._docs);
         if (snapShot) {
-          let data: Aluno[] = [];
+          let data: Usuario[] = [];
           snapShot.forEach(doc => {
             data.push({
               uid: doc.id,
+              email: doc.data().email,
               nome: doc.data().nome,
-              curso: doc.data().curso,
               urlFoto: doc.data().urlFoto,
+              curso: doc.data().curso,
+              perfil: doc.data().perfil,
             });
           });
           console.log('UserProvider, useEffect');
@@ -38,8 +41,35 @@ export const UserProvider = ({children}: any) => {
         }
       });
 
+    //listener para o perfil Professor
+    const listenerProfessores = firestore()
+      .collection('usuarios')
+      .where('perfil', '==', Perfil.Professor)
+      .orderBy('nome')
+      .onSnapshot(snapShot => {
+        //console.log(snapShot);
+        //console.log(snapShot._docs);
+        if (snapShot) {
+          let data: Usuario[] = [];
+          snapShot.forEach(doc => {
+            data.push({
+              uid: doc.id,
+              email: doc.data().email,
+              nome: doc.data().nome,
+              urlFoto: doc.data().urlFoto,
+              curso: doc.data().curso,
+              perfil: doc.data().perfil,
+            });
+          });
+          console.log('UserProvider, useEffect');
+          console.log(data);
+          setProfessores(data);
+        }
+      });
+
     return () => {
-      listener();
+      listenerAlunos();
+      listenerProfessores();
     };
   }, []);
 
@@ -146,7 +176,7 @@ export const UserProvider = ({children}: any) => {
   }
 
   return (
-    <UserContext.Provider value={{update, del, getUser, alunos}}>
+    <UserContext.Provider value={{update, del, getUser, alunos, professores}}>
       {children}
     </UserContext.Provider>
   );
