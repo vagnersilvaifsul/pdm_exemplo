@@ -1,13 +1,13 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, {useContext} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {Avatar, Card, FAB, List, useTheme} from 'react-native-paper';
-import {AlunoContext} from '../context/AlunoProvider';
+import {Avatar, Card, List, useTheme} from 'react-native-paper';
+import {UserContext} from '../context/UserProvider';
 import {Aluno} from '../model/Aluno';
 
 export default function Alunos({navigation}: any) {
   const theme = useTheme();
-  const {alunos} = useContext<any>(AlunoContext);
+  const {alunos} = useContext<any>(UserContext);
 
   const irParaTelaAluno = (aluno: any) => {
     navigation.navigate('AlunoTela', {
@@ -40,11 +40,6 @@ export default function Alunos({navigation}: any) {
           ))}
         </ScrollView>
       </List.Section>
-      <FAB
-        icon="plus"
-        style={styles.fab}
-        onPress={() => irParaTelaAluno(null)}
-      />
     </View>
   );
 }
@@ -66,11 +61,5 @@ const styles = StyleSheet.create({
     width: '100%',
     borderWidth: 1,
     marginBottom: 10,
-  },
-  fab: {
-    position: 'absolute',
-    margin: 16,
-    right: 0,
-    bottom: 0,
   },
 });
