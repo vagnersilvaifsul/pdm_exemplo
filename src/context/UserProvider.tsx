@@ -2,7 +2,9 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
-import React, {createContext, useContext} from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
+import {Aluno} from '../model/Aluno';
+import {Perfil} from '../model/Perfil';
 import {Usuario} from '../model/Usuario';
 import {AuthContext} from './AuthProvider';
 
@@ -10,6 +12,36 @@ export const UserContext = createContext({});
 
 export const UserProvider = ({children}: any) => {
   const {setUserAuth} = useContext<any>(AuthContext);
+  const [alunos, setAlunos] = useState<Aluno[]>([]);
+
+  useEffect(() => {
+    const listener = firestore()
+      .collection('usuarios')
+      .where('perfil', '==', Perfil.Aluno)
+      .orderBy('nome')
+      .onSnapshot(snapShot => {
+        //console.log(snapShot);
+        //console.log(snapShot._docs);
+        if (snapShot) {
+          let data: Aluno[] = [];
+          snapShot.forEach(doc => {
+            data.push({
+              uid: doc.id,
+              nome: doc.data().nome,
+              curso: doc.data().curso,
+              urlFoto: doc.data().urlFoto,
+            });
+          });
+          console.log('UserProvider, useEffect');
+          console.log(data);
+          setAlunos(data);
+        }
+      });
+
+    return () => {
+      listener();
+    };
+  }, []);
 
   async function update(usuario: Usuario, urlDevice: string): Promise<string> {
     try {
@@ -114,7 +146,7 @@ export const UserProvider = ({children}: any) => {
   }
 
   return (
-    <UserContext.Provider value={{update, del, getUser}}>
+    <UserContext.Provider value={{update, del, getUser, alunos}}>
       {children}
     </UserContext.Provider>
   );
