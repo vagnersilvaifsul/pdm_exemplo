@@ -35,8 +35,6 @@ export const UserProvider = ({children}: any) => {
               perfil: doc.data().perfil,
             });
           });
-          console.log('UserProvider, useEffect');
-          console.log(data);
           setAlunos(data);
         }
       });
@@ -61,8 +59,6 @@ export const UserProvider = ({children}: any) => {
               perfil: doc.data().perfil,
             });
           });
-          console.log('UserProvider, useEffect');
-          console.log(data);
           setProfessores(data);
         }
       });

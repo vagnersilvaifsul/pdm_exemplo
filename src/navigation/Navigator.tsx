@@ -14,6 +14,7 @@ import EsqueceuSenha from '../telas/EsqueceuSenha';
 import Menu from '../telas/Menu';
 import Perfil from '../telas/PerfilTela';
 import Preload from '../telas/Preload';
+import ProfessorTela from '../telas/ProfessorTela';
 import Professores from '../telas/Professores';
 import SignIn from '../telas/SignIn';
 import SignUp from '../telas/SignUp';
@@ -120,6 +121,13 @@ export default function Navigator() {
         <Stack.Screen
           component={AlunoTela}
           name="AlunoTela"
+          options={{
+            presentation: 'modal',
+          }}
+        />
+        <Stack.Screen
+          component={ProfessorTela}
+          name="ProfessorTela"
           options={{
             presentation: 'modal',
           }}

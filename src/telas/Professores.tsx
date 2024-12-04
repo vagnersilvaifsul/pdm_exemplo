@@ -9,9 +9,9 @@ export default function Professores({navigation}: any) {
   const theme = useTheme();
   const {professores} = useContext<any>(UserContext);
 
-  const irParaTelaProfessor = (aluno: any) => {
+  const irParaTelaProfessor = (professor: Usuario) => {
     navigation.navigate('ProfessorTela', {
-      aluno,
+      professor,
     });
   };
 
@@ -21,7 +21,7 @@ export default function Professores({navigation}: any) {
       <List.Section
         style={{...styles.list, backgroundColor: theme.colors.background}}>
         <List.Subheader style={styles.subhearder}>
-          Lista de Alunos
+          Lista de Professores
         </List.Subheader>
         <ScrollView>
           {professores.map((professor: Usuario, key: number) => (
