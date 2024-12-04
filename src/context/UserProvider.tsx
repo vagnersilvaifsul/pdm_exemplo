@@ -3,7 +3,6 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import React, {createContext, useContext, useEffect, useState} from 'react';
-import {Aluno} from '../model/Aluno';
 import {Perfil} from '../model/Perfil';
 import {Usuario} from '../model/Usuario';
 import {AuthContext} from './AuthProvider';
@@ -12,7 +11,7 @@ export const UserContext = createContext({});
 
 export const UserProvider = ({children}: any) => {
   const {setUserAuth} = useContext<any>(AuthContext);
-  const [alunos, setAlunos] = useState<Aluno[]>([]);
+  const [alunos, setAlunos] = useState<Usuario[]>([]);
 
   useEffect(() => {
     const listener = firestore()
@@ -23,17 +22,17 @@ export const UserProvider = ({children}: any) => {
         //console.log(snapShot);
         //console.log(snapShot._docs);
         if (snapShot) {
-          let data: Aluno[] = [];
+          let data: Usuario[] = [];
           snapShot.forEach(doc => {
             data.push({
               uid: doc.id,
+              email: doc.data().email,
               nome: doc.data().nome,
-              curso: doc.data().curso,
               urlFoto: doc.data().urlFoto,
+              curso: doc.data().curso,
+              perfil: doc.data().perfil,
             });
           });
-          console.log('UserProvider, useEffect');
-          console.log(data);
           setAlunos(data);
         }
       });

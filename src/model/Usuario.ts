@@ -8,7 +8,7 @@ export class Usuario {
   public urlFoto: string;
   public curso: Curso;
   public perfil: Perfil;
-  public senha: string;
+  public senha?: string;
   constructor(
     uid: string,
     email: string,
@@ -16,7 +16,7 @@ export class Usuario {
     urlFoto: string,
     curso: Curso,
     perfil: Perfil,
-    senha: string,
+    senha?: string,
   ) {
     this.uid = uid;
     this.email = email;
