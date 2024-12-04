@@ -13,6 +13,7 @@ export default function ProfessorTela({route}: any) {
     defaultValues: {
       nome: professor?.nome,
       curso: professor?.curso,
+      email: professor?.email,
     },
   });
 
@@ -67,6 +68,26 @@ export default function ProfessorTela({route}: any) {
           />
         )}
         name="curso"
+      />
+      <Controller
+        control={control}
+        render={({field: {onChange, onBlur, value}}) => (
+          <TextInput
+            style={styles.textinput}
+            label="Email"
+            placeholder="Digite seu email"
+            mode="outlined"
+            autoCapitalize="words"
+            returnKeyType="next"
+            keyboardType="default"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            editable={false}
+            right={<TextInput.Icon icon="email" />}
+          />
+        )}
+        name="email"
       />
     </View>
   );
