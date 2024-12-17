@@ -45,8 +45,6 @@ export const UserProvider = ({children}: any) => {
       .where('perfil', '==', Perfil.Professor)
       .orderBy('nome')
       .onSnapshot(snapShot => {
-        //console.log(snapShot);
-        //console.log(snapShot._docs);
         if (snapShot) {
           let data: Usuario[] = [];
           snapShot.forEach(doc => {
